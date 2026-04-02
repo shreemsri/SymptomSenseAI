@@ -4,7 +4,7 @@
   <br/>
   
   # 🏥 SymptomSense AI 
-  **Next-Gen Conversational Symptom Checker & Triage Assistant**
+  **Next-Gen Offline-Resilient Clinical Triage Engine**
 
   <p>
     <a href="#features">Features</a> •
@@ -16,14 +16,15 @@
   <p>
     <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
     <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS_4.0-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+    <img src="https://img.shields.io/badge/Chart.js_Radar-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white" alt="ChartJS" />
     <img src="https://img.shields.io/badge/Gemini%202.0%20Flash-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google Gemini" />
   </p>
 </div>
 
 <br/>
 
-> **🚀 2.0 Update:** SymptomSense now features the "Aetheris Clinical" design system with deep dark-mode glassmorphism, responsive micro-animations, and a completely NLP-driven Conversational Input that understands full medical sentences via Gemini!
+> **🚀 V2.0 Architect Update:** SymptomSense now features a completely custom **Light/Dark Mode** semantic routing architecture (Landing → Login → App). We've replaced the dark-navy terminal theme with a premium, human-centered medical UI. Crucially, the app now uses a **Zero-Downtime Offline NLP Fallback Engine**—meaning even if the Gemini API quota drops to 0, your triage engine flawlessly reverts to a deterministic local dictionary mesh to keep your hackathon demo running 100% offline!
 
 <br/>
 
@@ -31,34 +32,38 @@
 
 **SymptomSense AI** is a fully browser-compatible health-tech application built entirely for the frontend layout. With zero dependency on a backend server or a physical database, it utilizes a hardcoded medical JSON dataset mapped seamlessly with the **Google Gemini 2.0 Flash API**.
 
-It empowers users to evaluate acute symptoms and chronic risk indicators (such as Type 2 Diabetes) locally on their device, generating smart, context-aware AI insights directly within their browser!
+It empowers users to evaluate acute symptoms and chronic risk indicators (such as Type 2 Diabetes) locally on their device, generating smart, context-aware AI insights directly within their browser! 
 
 ---
 
 ## 🚀 Features
 
-### 💬 1. Conversational Symptom Checker
-- **NLP Text Extraction**: Type your symptoms in plain English sentences (e.g. *"I've had a severe headache and dizziness since morning"*). The Gemini engine intelligently strips out core symptoms, maps them to medical terms, and displays extracted data tags instantly!
-- **Local Scoring Engine**: Matches the AI-extracted symptoms locally against the dataset to compute the top 3 probable diseases with animated precision bars.
-- **Gemini Triage**: Securely calls the Gemini API a second time to explain the condition, output actionable next steps, identify red flags, and recommend specialized physicians.
+### 💬 1. Conversational Symptom Checker (Offline-Resilient!)
+- **Gemini NLP Extraction**: Type your symptoms in plain English sentences. The Gemini engine intelligently strips out core symptoms, maps them to medical terms, and displays extracted data tags instantly!
+- **⚡ Failsafe Offline Matrix**: If API Rate Limits are hit during a live demo, the engine instantly intercepts the 429 error and reroutes your string into a proprietary local `diseases.js` keyword scanner to safely compute results without HTTP access.
+- **Gemini Triage**: Securely calls the Gemini API to explain the condition, output actionable next steps, identify red flags, and recommend specialized physicians.
 
 ### 🩸 2. Diabetes Risk Gauge
-- **Vitals Interactive Sliders**: Input precise vitals (Age, BMI, Glucose, Insulin, BP, etc.).
-- **Weighted Local Algorithms**: Instantly view your risk score out of 100 on an animated Recharts radial gauge.
-- **AI Preventative Plans**: Generates customized diet boundaries and lifestyle modifications on the fly. 
+- **Vitals Interactive Sliders**: Input precise vitals (Age, BMI, Glucose, Insulin, BP, etc.) via premium UI sliders featuring responsive mint CSS tracking.
+- **Mathematical Scoring Engine**: Instantly view your calculated risk score out of 100 mapped seamlessly onto an SVG radial gauge without any library overhead!
+- **AI Preventative Plans**: Generates customized diet boundaries and lifestyle modifications on the fly based on biomarker variables.
 
 ### 📊 3. Health Synthesis Dashboard
-- **Aggregate Scoring**: Compiles an overall physical wellness score using dual results from Symptom and Diabetes checkers.
-- **Executive AI Summary**: Synthesizes all data points into one conclusive clinical priority and definitive next step.
-- **One-Click Export**: Downloads all predictions, scores, and Gemini recommendations into a portable `.txt` report.
+- **React-ChartJS-2 Radar**: Synthesizes Symptom Confidence, Diabetes Risk, and base Health metrics into a visually stunning, premium-grade Clinical Radar Chart.
+- **Executive Summary**: Synthesizes all independent datasets into one conclusive clinical priority and definitive next step via the AI.
+- **One-Click Export**: Downloads all predictions, scores, and Gemini recommendations into a secure, portable `.txt` report.
+
+### 🌓 4. Dynamic Theme Routing Engine
+- Fully functional pure-React state routing transitioning gracefully from a **Pill-Navigation Landing Page**, to a **Glassmorphic Login Gateway**, into the actual App.
+- Universal **Light/Dark Theme Switch** mapping standard Tailwind layout variables via standard CSS roots stored gracefully in browser `localStorage`. 
 
 ---
 
 ## 💻 Tech Stack
 
 - **Framework**: `React ^18.x`, `Vite`
-- **Styling**: `Tailwind CSS v4`
-- **Charting Engine**: `Recharts`
+- **Styling**: `Tailwind CSS v4` + Dynamic `:root/.dark` semantic maps
+- **Charting Engine**: `Chart.js` + `react-chartjs-2`
 - **Icons**: `Lucide React`
 - **AI / LLM**: `Google Gemini 2.0 Flash` (Serverless Edge-Requests)
 
@@ -82,6 +87,7 @@ Create a `.env` file at the root of your project and insert your Google Gemini A
 ```env
 VITE_GEMINI_API_KEY=your_gemini_api_key_here
 ```
+*(Note: If your API key returns Google's "Free Tier Limit 0" error due to region/workspace locks, SymptomSense will gracefully failover to its offline heuristic engine—so you can STILL hack!)*
 
 ### 4. Run the Local Development Server
 ```bash
