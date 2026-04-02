@@ -1,41 +1,44 @@
 import { AlertTriangle, Activity } from "lucide-react";
 
 export const DiseaseCard = ({ disease, confidence, severity }) => {
-  let severityColor = "bg-green-500/20 text-green-300 border-green-500/30";
-  let barColor = "bg-green-500";
+  let severityColor = "bg-emerald-500/10 text-emerald-300 border-emerald-500/30";
+  let barColor = "bg-emerald-500";
+  let borderColor = "border-l-emerald-500";
   
   if (severity === "moderate") {
-    severityColor = "bg-yellow-500/20 text-yellow-300 border-yellow-500/30";
-    barColor = "bg-yellow-500";
+    severityColor = "bg-tertiary/10 text-tertiary border-tertiary/30";
+    barColor = "bg-tertiary";
+    borderColor = "border-l-tertiary";
   } else if (severity === "severe") {
-    severityColor = "bg-red-500/20 text-red-300 border-red-500/30";
+    severityColor = "bg-red-500/10 text-red-500 border-red-500/30";
     barColor = "bg-red-500";
+    borderColor = "border-l-red-500";
   }
 
   return (
-    <div className="bg-slate-800/80 rounded-2xl border border-slate-700/50 p-4 relative overflow-hidden shadow-lg transition-transform hover:-translate-y-1 hover:shadow-sky-500/10 hover:border-slate-600">
-      <div className="flex justify-between items-start mb-4">
+    <div className={`glass-card hover-lift rounded-2xl border border-white/5 border-l-4 ${borderColor} p-5 relative overflow-hidden animate-fade-up`}>
+      <div className="flex justify-between items-start mb-4 relative z-10">
         <div>
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Activity size={18} className="text-sky-400" />
+          <h3 className="text-lg font-headline font-bold text-white flex items-center gap-2">
+            <span className="material-symbols-outlined text-sky-400">vital_signs</span>
             {disease.name}
           </h3>
-          <p className="text-sm text-slate-400 mt-1">Specialist: {disease.specialist}</p>
+          <p className="text-[10px] font-label uppercase tracking-widest text-slate-400 mt-1">Specialist: {disease.specialist}</p>
         </div>
-        <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border ${severityColor}`}>
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold border ${severityColor} shadow-inner`}>
           <AlertTriangle size={12} />
-          {severity.charAt(0).toUpperCase() + severity.slice(1)}
+          {severity}
         </span>
       </div>
       
-      <div className="space-y-1.5">
-        <div className="flex justify-between text-sm">
-          <span className="text-slate-300">Confidence Match</span>
-          <span className="font-bold text-white">{confidence}%</span>
+      <div className="space-y-1.5 relative z-10">
+        <div className="flex justify-between font-label text-[10px] uppercase tracking-widest">
+          <span className="text-slate-400">Confidence Match</span>
+          <span className="font-bold text-sky-400">{confidence}%</span>
         </div>
-        <div className="h-2 w-full bg-slate-700 rounded-full overflow-hidden">
+        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden shadow-inner">
           <div 
-            className={`h-full rounded-full ${barColor} transition-all duration-1000 ease-out`} 
+            className={`h-full rounded-full ${barColor} neon-glow transition-all duration-1000 ease-out`} 
             style={{ width: `${confidence}%` }}
           />
         </div>

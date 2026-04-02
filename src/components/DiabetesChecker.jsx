@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { RadialBarChart, RadialBar, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { Activity, Thermometer, ShieldAlert, Heart, Droplets, Info } from "lucide-react";
 import { calculateDiabetesRiskScore } from "../utils/scoring";
 import { callGeminiAPI } from "../utils/gemini";
@@ -58,24 +57,24 @@ export const DiabetesChecker = ({ onResultsChange }) => {
     setIsLoading(false);
   };
 
-  // Recharts data format
-  const chartData = [{ name: "Risk", value: riskResult.score, fill: riskResult.color.replace("text-", "").replace("-500", "") }];
-  const getFillHex = () => {
-    if (riskResult.score >= 66) return "#ef4444"; // red-500
-    if (riskResult.score >= 36) return "#eab308"; // yellow-500
-    return "#22c55e"; // green-500
-  };
+  // Custom SVG Gauge calculation
+  const radius = 110;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (riskResult.score / 100) * circumference;
 
   return (
     <div className="space-y-8 pb-8">
       <div className="grid lg:grid-cols-3 gap-8">
         
         {/* Left Col: Inputs */}
-        <div className="lg:col-span-2 bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-          <h2 className="text-2xl font-bold text-white mb-2">Vitals & Measurements</h2>
-          <p className="text-slate-400 mb-8 font-medium">Enter your latest readings for an accurate risk assessment.</p>
+        <div className="lg:col-span-2 glass-card mt-8 p-6 md:p-8 rounded-3xl relative overflow-hidden group animate-fade-up">
+          <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
+          <div className="relative z-10 mb-8">
+            <h2 className="text-2xl font-headline font-bold text-white tracking-tight">Diabetes Risk Analysis</h2>
+            <p className="text-slate-500 text-sm mt-1">Metabolic predictive modeling based on clinical biomarkers.</p>
+          </div>
           
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-8 relative z-10 animate-fade-up">
             <InputGroup 
               label="Age (years)" name="age" value={vitals.age} min={1} max={100} icon={Activity}
               onChange={handleSliderChange} 
@@ -113,48 +112,46 @@ export const DiabetesChecker = ({ onResultsChange }) => {
           <button
             onClick={handleCheckRisk}
             disabled={isLoading}
-            className="mt-8 w-full md:w-auto px-8 py-3 bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-700 disabled:text-slate-500 text-slate-900 font-bold rounded-xl transition-colors shadow-lg shadow-emerald-500/20"
+            className="mt-12 group w-full relative z-10 font-headline bg-gradient-to-r from-primary to-primary-container text-[#00354a] font-bold py-4 rounded-xl uppercase tracking-[0.2em] flex items-center justify-center gap-4 transition-all hover-lift neon-glow shadow-lg shadow-sky-500/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Generating AI Plan..." : "Generate AI Risk Plan"}
           </button>
         </div>
 
         {/* Right Col: Gauge & Score */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6">
            {/* Gauge Card */}
-           <div className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 flex flex-col items-center justify-center text-center shadow-lg relative overflow-hidden h-[300px]">
-             <h3 className="text-lg font-semibold text-slate-300 absolute top-6">Calculated Risk Score</h3>
-             
-             <div className="w-[200px] h-[200px] mt-6">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadialBarChart 
-                    cx="50%" cy="50%" 
-                    innerRadius="80%" outerRadius="100%" 
-                    barSize={15} 
-                    data={[{ value: riskResult.score }]}
-                    startAngle={220} endAngle={-40}
-                  >
-                    <PolarAngleAxis type="number" domain={[0, 100]} angleAxisId={0} tick={false} />
-                    <RadialBar
-                      background={{ fill: '#334155' }}
-                      dataKey="value"
-                      cornerRadius={30}
-                      fill={getFillHex()}
-                      isAnimationActive={true}
-                    />
-                  </RadialBarChart>
-                </ResponsiveContainer>
-                
-                {/* Center text inside the gauge */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-6">
-                  <span className={`text-5xl font-black ${riskResult.color}`}>{riskResult.score}</span>
-                  <span className="text-slate-400 text-sm font-medium mt-1">/ 100</span>
+           <div className="glass-card flex-1 min-h-[350px] p-8 rounded-3xl border border-white/5 flex flex-col justify-center items-center relative overflow-hidden">
+              <div className="absolute top-0 right-0 p-8 select-none pointer-events-none opacity-5">
+                <span className="text-8xl font-headline font-black text-white leading-none">RISK</span>
+              </div>
+              <div className="relative w-64 h-64 flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle className="text-white/5" cx="128" cy="128" fill="transparent" r={radius} stroke="currentColor" strokeWidth="8"></circle>
+                  <circle 
+                    className={`${riskResult.color} outline-none drop-shadow-[0_0_12px_rgba(currentColor,0.6)]`} 
+                    cx="128" cy="128" 
+                    fill="transparent" 
+                    r={radius} 
+                    stroke="currentColor" 
+                    strokeDasharray={circumference} 
+                    strokeDashoffset={offset} 
+                    strokeWidth="12" 
+                    style={{ transition: 'stroke-dashoffset 1s ease-out' }}
+                  ></circle>
+                </svg>
+                <div className="absolute flex flex-col items-center">
+                  <span className="text-6xl font-headline font-black text-white">{riskResult.score}</span>
+                  <span className="text-[10px] font-label text-slate-500 uppercase tracking-[0.3em] mt-1">Score / 100</span>
                 </div>
-             </div>
+              </div>
              
-             <div className={`mt-2 px-4 py-1.5 rounded-full text-sm font-bold bg-slate-900 ${riskResult.color} border border-slate-700`}>
-                {riskResult.label}
-             </div>
+              <div className="mt-8 text-center relative z-10 w-full flex justify-center">
+                <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-900 border border-slate-700 text-xs font-bold uppercase tracking-wider relative shadow-inner shadow-black/50">
+                  <span className={`w-2 h-2 rounded-full ${riskResult.color.replace('text-', 'bg-')} shadow-[0_0_8px_currentColor]`}></span>
+                  <span className={riskResult.color}>{riskResult.label}</span>
+                </div>
+              </div>
            </div>
 
            {/* Urgency Alert Card - ONLY SHOW WHEN AI PROCESSED */}
@@ -195,9 +192,9 @@ export const DiabetesChecker = ({ onResultsChange }) => {
 };
 
 const InputGroup = ({ label, name, value, min, max, step = 1, icon: Icon, onChange }) => (
-  <div className="space-y-2">
-    <div className="flex justify-between items-center text-sm font-medium">
-      <label className="text-slate-300 flex items-center gap-1.5"><Icon size={14} className="text-slate-500"/>{label}</label>
+  <div className="space-y-4">
+    <div className="flex justify-between text-xs font-label uppercase tracking-wider">
+      <span className="text-slate-400 flex items-center gap-1.5"><Icon size={14} className="text-slate-500"/>{label}</span>
       <span className="text-sky-400 font-bold">{value}</span>
     </div>
     <input 
@@ -208,7 +205,7 @@ const InputGroup = ({ label, name, value, min, max, step = 1, icon: Icon, onChan
       step={step}
       value={value} 
       onChange={onChange}
-      className="w-full accent-emerald-500 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
+      className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-sky-400"
     />
   </div>
 );

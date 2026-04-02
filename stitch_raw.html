@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#060e20",
+            "tertiary-fixed": "#ffddb8",
+            "on-error": "#690005",
+            "primary-fixed-dim": "#7bd0ff",
+            "on-primary-container": "#004965",
+            "on-primary-fixed": "#001e2c",
+            "surface-bright": "#31394d",
+            "tertiary-container": "#f1a02b",
+            "on-surface-variant": "#bdc8d1",
+            "on-tertiary-container": "#613b00",
+            "secondary": "#a4cce6",
+            "surface-container-high": "#222a3d",
+            "outline-variant": "#3e484f",
+            "inverse-primary": "#00668a",
+            "on-secondary-fixed": "#001e2c",
+            "surface-container-low": "#131b2e",
+            "inverse-on-surface": "#283044",
+            "surface-variant": "#2d3449",
+            "surface-container": "#171f33",
+            "on-tertiary-fixed-variant": "#653e00",
+            "secondary-fixed-dim": "#a4cce6",
+            "secondary-fixed": "#c4e7ff",
+            "primary": "#8ed5ff",
+            "on-tertiary-fixed": "#2a1700",
+            "error": "#ffb4ab",
+            "on-secondary": "#023449",
+            "on-tertiary": "#472a00",
+            "surface-tint": "#7bd0ff",
+            "error-container": "#93000a",
+            "tertiary-fixed-dim": "#ffb960",
+            "surface": "#0b1326",
+            "background": "#0b1326",
+            "on-surface": "#dae2fd",
+            "on-primary-fixed-variant": "#004c69",
+            "inverse-surface": "#dae2fd",
+            "primary-container": "#38bdf8",
+            "tertiary": "#ffc176",
+            "on-background": "#dae2fd",
+            "surface-dim": "#0b1326",
+            "on-primary": "#00354a",
+            "surface-container-highest": "#2d3449",
+            "primary-fixed": "#c4e7ff",
+            "on-secondary-container": "#92bad4",
+            "outline": "#87929a",
+            "on-error-container": "#ffdad6",
+            "on-secondary-fixed-variant": "#214b61",
+            "secondary-container": "#214b61"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk"],
+            "body": ["Manrope"],
+            "label": ["Manrope"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+<style>
+    .glass-card {
+      background: rgba(19, 27, 46, 0.6);
+      backdrop-filter: blur(24px);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+    }
+    .neon-glow {
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+    }
+    .neon-glow-hover:hover {
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+    }
+    .scanline {
+      background: linear-gradient(to bottom, transparent 50%, rgba(56, 189, 248, 0.05) 50%);
+      background-size: 100% 4px;
+    }
+    .radial-gradient-overlay {
+      background: radial-gradient(circle at top right, rgba(56, 189, 248, 0.08), transparent 70%);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden min-h-screen">
+<nav class="fixed top-0 w-full flex justify-between items-center px-6 py-4 bg-[#0b1326]/60 backdrop-blur-xl border-b border-sky-400/10 z-50">
+<div class="flex items-center gap-3">
+<span class="text-xl font-headline font-black tracking-tighter text-white">SymptomSense AI 🏥</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-headline text-sm tracking-wider uppercase font-bold text-sky-400 border-b-2 border-sky-400 transition-colors duration-300" href="#">Diagnostics</a>
+<a class="font-headline text-sm tracking-wider uppercase font-bold text-slate-400 hover:text-sky-300 transition-colors duration-300" href="#">Risk Analysis</a>
+<a class="font-headline text-sm tracking-wider uppercase font-bold text-slate-400 hover:text-sky-300 transition-colors duration-300" href="#">Patient History</a>
+</div>
+<button class="bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 py-2 rounded-full font-headline font-bold text-sm tracking-wide shadow-[0_0_15px_rgba(56,189,248,0.3)] hover:shadow-[0_0_25px_rgba(56,189,248,0.5)] transition-all active:scale-95">
+      Download Report
+    </button>
+</nav>
+<aside class="hidden lg:flex flex-col h-screen w-64 fixed left-0 top-0 pt-24 pb-8 bg-[#131b2e]/80 backdrop-blur-2xl border-r border-white/5 z-40">
+<div class="px-6 mb-10">
+<p class="font-headline font-black text-sky-400 text-lg">SymptomSense</p>
+<p class="text-slate-500 text-xs font-label uppercase tracking-widest">Clinical AI v2.4</p>
+</div>
+<div class="flex-1 space-y-2 px-2">
+<a class="bg-sky-500/10 text-sky-400 border-r-2 border-sky-400 px-4 py-3 flex items-center gap-3 transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]">clinical_notes</span>
+<span class="text-sm font-medium">Diagnostics</span>
+</a>
+<a class="text-slate-500 px-4 py-3 flex items-center gap-3 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">psychology</span>
+<span class="text-sm font-medium group-hover:translate-x-1 transition-transform">Risk Analysis</span>
+</a>
+<a class="text-slate-500 px-4 py-3 flex items-center gap-3 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">history</span>
+<span class="text-sm font-medium group-hover:translate-x-1 transition-transform">Patient History</span>
+</a>
+<a class="text-slate-500 px-4 py-3 flex items-center gap-3 hover:bg-white/5 hover:text-white transition-all group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">settings</span>
+<span class="text-sm font-medium group-hover:translate-x-1 transition-transform">Settings</span>
+</a>
+</div>
+<div class="px-4 mt-auto">
+<div class="p-4 rounded-xl bg-surface-container-high/40 border border-white/5">
+<div class="flex items-center gap-3 mb-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary/30">
+<img alt="Medical Practitioner Avatar" class="w-full h-full object-cover" data-alt="professional medical practitioner portrait with soft cinematic lighting and futuristic clinic background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnh-N3IFOrkIfRuP8xzi-0zLCpDe0tiiIgPFdE8QJ9mtn2IKC2wMhAmxpN6dzr6XbnRlSSmXWbbxpoxAtH3tbvtwe8YxoTwQ_IVdYQrpj_1yj7mIGevR0Io6exEwetZUnCdWSIYC_SHkiXlKkbBRuHKMYvX8m1n3nWngOKeAlELBEf69iJlXzu_MdKLlIOeVtTjqONOIjZLxdvbRwHdpqkCmLNHBrWX9hECnWIUXHE7qMANepmnbi2wc0UdfxVLnTNmgPO4doMv9c"/>
+</div>
+<div>
+<p class="text-xs font-bold text-white">Dr. Sarah Chen</p>
+<p class="text-[10px] text-sky-400 uppercase tracking-tighter">Chief Neurologist</p>
+</div>
+</div>
+<button class="w-full py-2 bg-white/5 hover:bg-white/10 text-white text-xs rounded-lg transition-all font-headline font-bold uppercase tracking-widest">
+          View Profile
+        </button>
+</div>
+</div>
+</aside>
+<main class="lg:ml-64 pt-24 px-6 pb-12 min-h-screen radial-gradient-overlay">
+<div class="max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-12 gap-8">
+<section class="xl:col-span-5 flex flex-col gap-6">
+<div class="glass-card p-8 rounded-3xl relative overflow-hidden">
+<div class="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
+<div class="flex items-center gap-3 mb-8">
+<div class="p-2 bg-sky-500/20 rounded-lg">
+<span class="material-symbols-outlined text-sky-400" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<h2 class="text-2xl font-headline font-bold text-white tracking-tight">Symptom Checker</h2>
+</div>
+<div class="space-y-6">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-sky-400 transition-colors">search</span>
+<input class="w-full bg-surface-container-lowest border-none border-b-2 border-transparent focus:border-primary transition-all pl-12 pr-4 py-4 rounded-xl text-white placeholder:text-slate-600 focus:ring-0" placeholder="Search symptoms (e.g. fatigue, dizziness)" type="text"/>
+</div>
+<div class="flex flex-wrap gap-2">
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium">
+                Increased Thirst
+                <span class="material-symbols-outlined text-sm cursor-pointer hover:text-white">close</span>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium">
+                Frequent Urination
+                <span class="material-symbols-outlined text-sm cursor-pointer hover:text-white">close</span>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium">
+                Blurred Vision
+                <span class="material-symbols-outlined text-sm cursor-pointer hover:text-white">close</span>
+</div>
+<div class="border border-white/10 text-slate-400 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium italic">
+                + Add more
+              </div>
+</div>
+<button class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary font-headline font-black py-4 rounded-xl uppercase tracking-widest flex items-center justify-center gap-3 transition-all active:scale-95 neon-glow neon-glow-hover">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+              Analyze Symptoms
+            </button>
+</div>
+</div>
+<div class="glass-card p-6 rounded-3xl">
+<h3 class="text-xs font-label font-bold text-slate-500 uppercase tracking-widest mb-4">Diagnostic Confidence</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<span class="text-sm font-medium text-white">Neural Processing</span>
+<span class="text-xs text-sky-400 font-headline">98.2%</span>
+</div>
+<div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+<div class="h-full w-[98%] bg-sky-400 neon-glow"></div>
+</div>
+<p class="text-[10px] text-slate-400 leading-relaxed">AI engine is processing real-time clinical benchmarks against patient metadata.</p>
+</div>
+</div>
+</section>
+<section class="xl:col-span-7 flex flex-col gap-6">
+<div class="glass-card p-8 rounded-3xl h-full flex flex-col relative overflow-hidden">
+<div class="absolute top-0 right-0 p-8">
+<span class="text-[100px] font-headline font-black text-white/5 leading-none select-none">RISK</span>
+</div>
+<div class="mb-8">
+<h2 class="text-2xl font-headline font-bold text-white tracking-tight">Diabetes Risk Analysis</h2>
+<p class="text-slate-500 text-sm mt-1">Metabolic predictive modeling based on clinical biomarkers.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 flex-1 items-center">
+<div class="space-y-10">
+<div class="space-y-4">
+<div class="flex justify-between text-xs font-label uppercase tracking-wider">
+<span class="text-slate-400">Patient Age</span>
+<span class="text-sky-400">42 Years</span>
+</div>
+<input class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-sky-400" type="range"/>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-xs font-label uppercase tracking-wider">
+<span class="text-slate-400">BMI Index</span>
+<span class="text-sky-400">28.4</span>
+</div>
+<input class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-sky-400" type="range"/>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between text-xs font-label uppercase tracking-wider">
+<span class="text-slate-400">Glucose (mg/dL)</span>
+<span class="text-sky-400">114</span>
+</div>
+<input class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-sky-400" type="range"/>
+</div>
+</div>
+<div class="flex flex-col items-center justify-center">
+<div class="relative w-64 h-64 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-white/5" cx="128" cy="128" fill="transparent" r="110" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-sky-400 drop-shadow-[0_0_12px_rgba(56,189,248,0.6)]" cx="128" cy="128" fill="transparent" r="110" stroke="currentColor" stroke-dasharray="691" stroke-dashoffset="240" stroke-width="12"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-6xl font-headline font-black text-white">65</span>
+<span class="text-[10px] font-label text-slate-500 uppercase tracking-[0.3em]">Score / 100</span>
+</div>
+</div>
+<div class="mt-8 text-center">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-tertiary/10 border border-tertiary/20 text-tertiary text-xs font-bold uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                  Moderate Risk Detected
+                </div>
+</div>
+</div>
+</div>
+<div class="mt-12">
+<button class="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white font-headline font-bold py-5 rounded-xl uppercase tracking-[0.2em] flex items-center justify-center gap-4 transition-all group">
+<span class="material-symbols-outlined text-sky-400 group-hover:scale-110 transition-transform">auto_awesome</span>
+              Generate AI Risk Plan
+            </button>
+</div>
+</div>
+</section>
+<section class="xl:col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="glass-card p-6 rounded-3xl border-l-4 border-l-sky-400">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-sky-400">history_edu</span>
+<span class="text-[10px] text-slate-500 font-label">LAST UPDATE: 2H AGO</span>
+</div>
+<h4 class="text-white font-headline font-bold mb-2">Clinical History</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Previous screenings indicate a persistent trend in elevated fasting glucose levels over 6 months.</p>
+</div>
+<div class="glass-card p-6 rounded-3xl border-l-4 border-l-tertiary">
+<div class="flex justify-between items-start mb-4">
+<span class="material-symbols-outlined text-tertiary">warning</span>
+<span class="text-[10px] text-slate-500 font-label">PRIORITY: HIGH</span>
+</div>
+<h4 class="text-white font-headline font-bold mb-2">Suggested Action</h4>
+<p class="text-slate-400 text-sm leading-relaxed">Schedule an HbA1c laboratory test within the next 72 hours for diagnostic confirmation.</p>
+</div>
+<div class="glass-card p-6 rounded-3xl relative overflow-hidden group">
+<img alt="Medical Lab" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-110 transition-transform duration-700" data-alt="close-up of futuristic medical laboratory glass equipment with soft blue neon refractions and technical depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx17rrGlFyfmnbddqZPmWAM3dArV8TbCBs3wxVkQiSEkodwZHZIBrnP2GaUTlPNLLRELu2w2Pa4Egg0PopVxJmcHpmCu7wokhaSTgR17m4L4Lvr9tXFjhe2afwrPBZTKDCKJav6MjOlktXUhlsvsqEv-xW4_CWxIsnJfH568e349QvSu1HNhGMNq5BuaOSuC-hpbgzwbwEQxaKKwWczavw5Cgk7w7W_tSqsYVXvYcOaTJaYJWJKDrxzMPvfIeIJTc3-Nxzq5MqHls"/>
+<div class="relative z-10 h-full flex flex-col justify-end">
+<h4 class="text-white font-headline font-bold mb-1">Clinic Locator</h4>
+<p class="text-sky-400 text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+              Find Nearby Centers
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</p>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="lg:ml-64 px-6 py-12 border-t border-white/5">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-center md:text-left">
+<p class="text-slate-500 text-[10px] font-label uppercase tracking-widest">© 2024 SymptomSense AI. For clinical reference only.</p>
+<p class="text-slate-600 text-[10px] mt-1">Not a substitute for professional medical advice, diagnosis, or treatment.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 hover:text-sky-400 text-xs font-medium transition-colors" href="#">Privacy Protocol</a>
+<a class="text-slate-500 hover:text-sky-400 text-xs font-medium transition-colors" href="#">Compliance</a>
+<a class="text-slate-500 hover:text-sky-400 text-xs font-medium transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

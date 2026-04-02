@@ -1,9 +1,10 @@
 <div align="center">
   <img src="https://img.shields.io/badge/CodeCure%20AI-SPIRIT'26-0e172a?style=for-the-badge&logo=medapps&logoColor=38bdf8" alt="CodeCure AI SPIRIT'26 Hackathon" />
+  <img src="https://img.shields.io/badge/Stitch%20UI-Aetheris%20Clinical-060e20?style=for-the-badge&logo=css3&logoColor=38bdf8" alt="Stitch UI Framework" />
   <br/>
   
   # 🏥 SymptomSense AI 
-  **Smart Symptom Checker & Triage Assistant**
+  **Next-Gen Conversational Symptom Checker & Triage Assistant**
 
   <p>
     <a href="#features">Features</a> •
@@ -22,6 +23,10 @@
 
 <br/>
 
+> **🚀 2.0 Update:** SymptomSense now features the "Aetheris Clinical" design system with deep dark-mode glassmorphism, responsive micro-animations, and a completely NLP-driven Conversational Input that understands full medical sentences via Gemini!
+
+<br/>
+
 ## 🌟 Overview
 
 **SymptomSense AI** is a fully browser-compatible health-tech application built entirely for the frontend layout. With zero dependency on a backend server or a physical database, it utilizes a hardcoded medical JSON dataset mapped seamlessly with the **Google Gemini 2.0 Flash API**.
@@ -32,10 +37,10 @@ It empowers users to evaluate acute symptoms and chronic risk indicators (such a
 
 ## 🚀 Features
 
-### 🩺 1. Smart Symptom Checker
-- **Live Autocomplete Search**: Quickly find symptoms from a curated list of top conditions.
-- **Local Scoring Engine**: Matches symptoms locally to compute the top 3 probable diseases with animated confidence dials.
-- **Gemini Triage**: Securely calls the Gemini API to explain the condition, output actionable next steps, identify red flags, and recommend specialized physicians.
+### 💬 1. Conversational Symptom Checker
+- **NLP Text Extraction**: Type your symptoms in plain English sentences (e.g. *"I've had a severe headache and dizziness since morning"*). The Gemini engine intelligently strips out core symptoms, maps them to medical terms, and displays extracted data tags instantly!
+- **Local Scoring Engine**: Matches the AI-extracted symptoms locally against the dataset to compute the top 3 probable diseases with animated precision bars.
+- **Gemini Triage**: Securely calls the Gemini API a second time to explain the condition, output actionable next steps, identify red flags, and recommend specialized physicians.
 
 ### 🩸 2. Diabetes Risk Gauge
 - **Vitals Interactive Sliders**: Input precise vitals (Age, BMI, Glucose, Insulin, BP, etc.).

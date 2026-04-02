@@ -105,93 +105,97 @@ Provide a composite health recommendation based on both results combined. Respon
 
   return (
     <div className="space-y-6 pb-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 relative z-10">
         <div>
-          <h2 className="text-2xl font-bold text-white">Comprehensive Dashboard</h2>
-          <p className="text-slate-400 font-medium mt-1">Your synthesized health metrics and AI guidance.</p>
+          <h2 className="text-2xl font-headline font-bold text-white tracking-tight">Comprehensive Dashboard</h2>
+          <p className="text-slate-400 text-sm mt-1">Your synthesized health metrics and AI guidance.</p>
         </div>
         <button 
           onClick={handleDownload}
           disabled={isLoading}
-          className="flex items-center gap-2 px-5 py-2.5 bg-indigo-500 hover:bg-indigo-400 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-indigo-500/20 disabled:opacity-50"
+          className="flex items-center gap-3 font-headline px-6 py-3 bg-gradient-to-r from-primary to-primary-container text-[#00354a] font-bold rounded-xl hover-lift active:scale-95 disabled:opacity-50"
         >
           <Download size={18} /> Download Full Report
         </button>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-6 relative z-10">
         {/* Composite Health Score */}
-        <div className="bg-slate-800/80 rounded-2xl p-6 border border-slate-700 flex flex-col items-center justify-center text-center shadow-lg">
-          <h3 className="text-slate-400 font-medium mb-4">Overall Wellness Score</h3>
-          <div className={`text-6xl font-black ${scoreColor} mb-2`}>{healthScore}</div>
-          <p className="text-sm text-slate-500">Derived from symptom severity and diabetes risk</p>
+        <div className="glass-card hover-lift p-6 rounded-3xl border-l-[6px] border-l-primary flex flex-col items-center justify-center text-center shadow-lg relative overflow-hidden animate-fade-up stagger-1">
+          <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none select-none">
+            <span className="text-6xl font-headline font-black text-white">HEALTH</span>
+          </div>
+          <h3 className="text-slate-400 font-label text-[10px] uppercase tracking-[0.2em] mb-4">Overall Wellness Score</h3>
+          <div className={`text-6xl font-headline font-black ${scoreColor} mb-2 drop-shadow-[0_0_12px_rgba(currentColor,0.4)]`}>{healthScore}</div>
+          <p className="text-xs text-slate-500 relative z-10">Derived from symptom severity and diabetes risk</p>
         </div>
 
         {/* Tab 1 Summary */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-           <h3 className="font-semibold text-slate-300 mb-4 flex items-center gap-2 border-b border-slate-700 pb-2">
-             <AlertCircle size={16} className="text-sky-400"/> Primary Symptom Risk
-           </h3>
-           <div className="text-2xl font-bold text-white leading-tight">
-             {symptomResults[0].name}
+        <div className="glass-card hover-lift p-6 rounded-3xl border-l-4 border-l-sky-400 relative overflow-hidden animate-fade-up stagger-2">
+           <div className="flex justify-between items-start mb-4">
+             <span className="material-symbols-outlined text-sky-400">medical_services</span>
+             <span className="text-[10px] text-slate-500 font-label tracking-widest">SYMPTOM RISK</span>
            </div>
-           <div className="mt-2 text-sky-400 font-medium">
+           <h4 className="text-white font-headline text-xl font-bold mb-1 leading-tight">
+             {symptomResults[0].name}
+           </h4>
+           <div className="mt-1 text-sky-400 text-sm font-bold uppercase tracking-wider">
              {symptomResults[0].confidence}% Confidence Match
            </div>
-           <div className="mt-3 inline-block px-2 py-1 bg-slate-900 rounded-md text-xs font-semibold text-slate-300">
+           <div className="mt-4 inline-block px-3 py-1.5 bg-surface-container-low border border-white/5 rounded-full text-xs font-semibold text-slate-300 shadow-inner">
              Specialist: {symptomResults[0].specialist}
            </div>
         </div>
 
         {/* Tab 2 Summary */}
-        <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
-           <h3 className="font-semibold text-slate-300 mb-4 flex items-center gap-2 border-b border-slate-700 pb-2">
-             <CheckCircle size={16} className="text-emerald-400"/> Diabetes Risk Indicator
-           </h3>
-           <div className={`text-3xl font-bold ${diabetesResults.color} leading-tight`}>
-             {diabetesResults.score}/100
+        <div className="glass-card hover-lift p-6 rounded-3xl border-l-4 border-l-tertiary relative overflow-hidden animate-fade-up stagger-3">
+           <div className="flex justify-between items-start mb-4">
+             <span className="material-symbols-outlined text-tertiary">warning</span>
+             <span className="text-[10px] text-slate-500 font-label tracking-widest">DIABETES RISK</span>
            </div>
-           <div className="mt-2 text-slate-300 font-medium">
-             Level: <span className={diabetesResults.color}>{diabetesResults.label}</span>
+           <h4 className="text-white font-headline text-xl font-bold mb-1">
+             Score: {diabetesResults.score}/100
+           </h4>
+           <div className={`mt-1 ${diabetesResults.color} text-sm font-bold uppercase tracking-wider mb-3`}>
+             {diabetesResults.label}
+           </div>
+           <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+             <div className="h-full bg-tertiary neon-glow" style={{ width: `${diabetesResults.score}%` }}></div>
            </div>
         </div>
       </div>
 
-      <div className="border-t border-slate-800 my-8 pt-8" />
-
       {isLoading && <LoadingSkeleton />}
 
       {recommendation && !isLoading && (
-        <div className="bg-gradient-to-br from-indigo-900/30 to-purple-900/30 border border-indigo-800/50 rounded-3xl p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none" />
+        <div className="glass-card mt-8 p-6 md:p-8 rounded-3xl relative overflow-hidden group animate-fade-up">
+          <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
           
-          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-             <BrainCircuit size={28} className="text-indigo-400" />
+          <h3 className="text-2xl font-headline font-bold text-white mb-6 flex items-center gap-3 relative z-10">
+             <span className="material-symbols-outlined text-primary text-3xl">psychology</span>
              AI Synthesis & Recommendations
           </h3>
 
           <div className="space-y-6 relative z-10">
             <div>
-              <h4 className="text-indigo-300 font-semibold mb-2 uppercase text-sm tracking-wider">Executive Summary</h4>
-              <p className="text-slate-200 text-lg leading-relaxed bg-slate-900/40 p-4 rounded-xl border border-slate-800/50">
+              <h4 className="text-sky-400 font-label font-bold mb-2 uppercase text-xs tracking-[0.2em]">Executive Summary</h4>
+              <p className="text-slate-200 text-sm md:text-base leading-relaxed bg-surface-container-low p-5 rounded-2xl border border-white/5">
                 {recommendation.summary}
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 gap-6 mt-4">
                <div>
-                  <h4 className="text-purple-300 font-semibold mb-2 uppercase text-sm tracking-wider">Immediate Priority</h4>
-                  <div className="bg-slate-900/40 p-4 rounded-xl border border-slate-800/50 text-slate-300 h-full">
+                  <h4 className="text-tertiary font-label font-bold mb-2 uppercase text-xs tracking-[0.2em]">Immediate Priority</h4>
+                  <div className="bg-surface-container-low p-5 rounded-2xl border border-white/5 text-slate-300 text-sm h-full flex items-center">
                     {recommendation.priority}
                   </div>
                </div>
                <div>
-                  <h4 className="text-pink-300 font-semibold mb-2 uppercase text-sm tracking-wider">Crucial Next Step</h4>
-                  <div className="bg-slate-900/40 p-4 rounded-xl border border-slate-800/50 text-slate-300 h-full">
-                    <span className="flex items-center gap-2">
-                       <CheckCircle size={18} className="text-pink-500" />
-                       {recommendation.nextStep}
-                    </span>
+                  <h4 className="text-emerald-400 font-label font-bold mb-2 uppercase text-xs tracking-[0.2em]">Crucial Next Step</h4>
+                  <div className="bg-surface-container-low p-5 rounded-2xl border border-emerald-500/20 text-slate-300 text-sm h-full flex items-center gap-3">
+                    <span className="material-symbols-outlined text-emerald-500 bg-emerald-500/10 p-2 rounded-full">check_circle</span>
+                    {recommendation.nextStep}
                   </div>
                </div>
             </div>
