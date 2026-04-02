@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #0f172a;
+  --color-skyblue: #38bdf8;
+}
+
+body {
+  background-color: var(--color-navy);
+  color: white;
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
