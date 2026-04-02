@@ -23,6 +23,7 @@ function App() {
         <Dashboard 
           symptomResults={symptomResults} 
           diabetesResults={diabetesResults} 
+          onNavigate={setActiveTab}
         />
       )}
     </Layout>

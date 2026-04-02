@@ -1,44 +1,41 @@
 import { AlertTriangle, Activity } from "lucide-react";
 
 export const DiseaseCard = ({ disease, confidence, severity }) => {
-  let severityColor = "bg-emerald-500/10 text-emerald-300 border-emerald-500/30";
-  let barColor = "bg-emerald-500";
-  let borderColor = "border-l-emerald-500";
+  let severityBadge = "bg-[#00C9A7]/10 text-[#00C9A7] border-[#00C9A7]/30";
+  let barColor = "bg-[#00C9A7]";
   
   if (severity === "moderate") {
-    severityColor = "bg-tertiary/10 text-tertiary border-tertiary/30";
-    barColor = "bg-tertiary";
-    borderColor = "border-l-tertiary";
+    severityBadge = "bg-[#FF9F1C]/10 text-[#FF9F1C] border-[#FF9F1C]/30";
+    barColor = "bg-[#FF9F1C]";
   } else if (severity === "severe") {
-    severityColor = "bg-red-500/10 text-red-500 border-red-500/30";
-    barColor = "bg-red-500";
-    borderColor = "border-l-red-500";
+    severityBadge = "bg-[#ef4444]/10 text-[#ef4444] border-[#ef4444]/30";
+    barColor = "bg-[#ef4444]";
   }
 
   return (
-    <div className={`glass-card hover-lift rounded-2xl border border-white/5 border-l-4 ${borderColor} p-5 relative overflow-hidden animate-fade-up`}>
+    <div className={`premium-card premium-card-hover p-6 relative overflow-hidden animate-fade-up`}>
       <div className="flex justify-between items-start mb-4 relative z-10">
         <div>
-          <h3 className="text-lg font-headline font-bold text-white flex items-center gap-2">
-            <span className="material-symbols-outlined text-sky-400">vital_signs</span>
+          <h3 className="text-lg font-headline text-[#1A1A2E] flex items-center gap-2">
+            <span className="material-symbols-outlined text-[#00C9A7]">vital_signs</span>
             {disease.name}
           </h3>
-          <p className="text-[10px] font-label uppercase tracking-widest text-slate-400 mt-1">Specialist: {disease.specialist}</p>
+          <p className="text-xs font-label text-[#7B7B8F] mt-1">Specialist: {disease.specialist}</p>
         </div>
-        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold border ${severityColor} shadow-inner`}>
-          <AlertTriangle size={12} />
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] uppercase font-bold border ${severityBadge}`}>
+          <AlertTriangle size={12} strokeWidth={2.5} />
           {severity}
         </span>
       </div>
       
-      <div className="space-y-1.5 relative z-10">
-        <div className="flex justify-between font-label text-[10px] uppercase tracking-widest">
-          <span className="text-slate-400">Confidence Match</span>
-          <span className="font-bold text-sky-400">{confidence}%</span>
+      <div className="space-y-2 relative z-10">
+        <div className="flex justify-between font-label text-xs">
+          <span className="text-[#7B7B8F]">Confidence Match</span>
+          <span className="font-bold text-[#1A1A2E]">{confidence}%</span>
         </div>
-        <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden shadow-inner">
+        <div className="h-2 w-full bg-[#E5E4E0] rounded-full overflow-hidden">
           <div 
-            className={`h-full rounded-full ${barColor} neon-glow transition-all duration-1000 ease-out`} 
+            className={`h-full rounded-full ${barColor} transition-all duration-1000 ease-out`} 
             style={{ width: `${confidence}%` }}
           />
         </div>

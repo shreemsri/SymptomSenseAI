@@ -16,14 +16,18 @@ export const DiabetesChecker = ({ onResultsChange }) => {
     pedigree: 0.5
   });
 
-  const [riskResult, setRiskResult] = useState({ score: 0, label: "Unknown", color: "text-slate-500" });
+  const [riskResult, setRiskResult] = useState({ score: 0, label: "Unknown", color: "text-[#7B7B8F]" });
   const [geminiResult, setGeminiResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Auto-recalculate locally when sliders change
   useEffect(() => {
     const result = calculateDiabetesRiskScore(vitals);
-    setRiskResult(result);
+    // Map old dark colors to new light colors safely
+    let lightColor = "#7B7B8F";
+    if (result.color.includes("emerald")) lightColor = "#00C9A7";
+    if (result.color.includes("yellow")) lightColor = "#FF9F1C";
+    if (result.color.includes("red")) lightColor = "#ef4444";
+    setRiskResult({ ...result, hexColor: lightColor });
   }, [vitals]);
 
   const handleSliderChange = (e) => {
@@ -35,9 +39,7 @@ export const DiabetesChecker = ({ onResultsChange }) => {
     setIsLoading(true);
     setGeminiResult(null);
 
-    if (onResultsChange) {
-       onResultsChange(riskResult);
-    }
+    if (onResultsChange) onResultsChange(riskResult);
 
     const prompt = `A patient has these vitals: Age=${vitals.age}, BMI=${vitals.bmi}, Glucose=${vitals.glucose}mg/dL, BP=${vitals.bloodPressure}mmHg. Their diabetes risk score is ${riskResult.score}/100 (${riskResult.label}). Give a response in exactly this JSON format:
 {
@@ -47,9 +49,9 @@ export const DiabetesChecker = ({ onResultsChange }) => {
 }`;
 
     const fallback = {
-      tip1: "Focus on a balanced diet rich in whole grains and vegetables.",
-      tip2: "Maintain moderate daily exercise, at least 30 minutes a day.",
-      urgency: riskResult.score > 65 ? "See a doctor soon for evaluation" : "Routine checkup"
+      tip1: "Focus on a balanced diet rich in whole grains, fiber, and lean proteins.",
+      tip2: "Maintain moderate daily exercise, at least 30 minutes of brisk walking.",
+      urgency: riskResult.score > 65 ? "Requires medical evaluation soon." : "Routine preventative checkups."
     };
 
     const result = await callGeminiAPI(prompt, fallback);
@@ -57,117 +59,91 @@ export const DiabetesChecker = ({ onResultsChange }) => {
     setIsLoading(false);
   };
 
-  // Custom SVG Gauge calculation
   const radius = 110;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (riskResult.score / 100) * circumference;
 
   return (
-    <div className="space-y-8 pb-8">
-      <div className="grid lg:grid-cols-3 gap-8">
+    <div className="space-y-8 pb-8 animate-fade-up">
+      <div className="grid lg:grid-cols-5 gap-8">
         
-        {/* Left Col: Inputs */}
-        <div className="lg:col-span-2 glass-card mt-8 p-6 md:p-8 rounded-3xl relative overflow-hidden group animate-fade-up">
-          <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
-          <div className="relative z-10 mb-8">
-            <h2 className="text-2xl font-headline font-bold text-white tracking-tight">Diabetes Risk Analysis</h2>
-            <p className="text-slate-500 text-sm mt-1">Metabolic predictive modeling based on clinical biomarkers.</p>
+        {/* Left Col: Inputs (60%) */}
+        <div className="lg:col-span-3 premium-card p-6 md:p-10 mb-2">
+          <div className="mb-8">
+            <h2 className="text-3xl font-headline text-[#1A1A2E] tracking-tight">Vitals & Assessment</h2>
+            <p className="text-[#7B7B8F] text-sm mt-2">Adjust your clinical biomarkers to calculate risk.</p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8 relative z-10 animate-fade-up">
-            <InputGroup 
-              label="Age (years)" name="age" value={vitals.age} min={1} max={100} icon={Activity}
-              onChange={handleSliderChange} 
-            />
-            <InputGroup 
-              label="BMI (kg/m²)" name="bmi" value={vitals.bmi} min={10} max={50} icon={Activity}
-              onChange={handleSliderChange} 
-            />
-             <InputGroup 
-              label="Glucose (mg/dL)" name="glucose" value={vitals.glucose} min={50} max={300} icon={Droplets}
-              onChange={handleSliderChange} 
-            />
-             <InputGroup 
-              label="Blood Pressure (mmHg)" name="bloodPressure" value={vitals.bloodPressure} min={40} max={140} icon={Heart}
-              onChange={handleSliderChange} 
-            />
-             <InputGroup 
-              label="Insulin (µU/ml)" name="insulin" value={vitals.insulin} min={0} max={900} icon={Thermometer}
-              onChange={handleSliderChange} 
-            />
-             <InputGroup 
-              label="Skin Thickness (mm)" name="skinThickness" value={vitals.skinThickness} min={0} max={100} icon={Activity}
-              onChange={handleSliderChange} 
-            />
-             <InputGroup 
-              label="Pedigree Function" name="pedigree" value={vitals.pedigree} min={0} max={2.5} step={0.1} icon={Activity}
-              onChange={handleSliderChange} 
-            />
-             <InputGroup 
-              label="Pregnancies" name="pregnancies" value={vitals.pregnancies} min={0} max={15} icon={Activity}
-              onChange={handleSliderChange} 
-            />
+          <div className="grid md:grid-cols-2 gap-x-10 gap-y-8">
+            <InputGroup label="Age (years)" name="age" value={vitals.age} min={1} max={100} icon={Activity} onChange={handleSliderChange} />
+            <InputGroup label="BMI (kg/m²)" name="bmi" value={vitals.bmi} min={10} max={50} icon={Activity} onChange={handleSliderChange} />
+            <InputGroup label="Glucose (mg/dL)" name="glucose" value={vitals.glucose} min={50} max={300} icon={Droplets} onChange={handleSliderChange} />
+            <InputGroup label="Blood Pressure" name="bloodPressure" value={vitals.bloodPressure} min={40} max={140} icon={Heart} onChange={handleSliderChange} />
+            <InputGroup label="Insulin (µU/ml)" name="insulin" value={vitals.insulin} min={0} max={900} icon={Thermometer} onChange={handleSliderChange} />
+            <InputGroup label="Skin Thickness" name="skinThickness" value={vitals.skinThickness} min={0} max={100} icon={Activity} onChange={handleSliderChange} />
+            <InputGroup label="Pedigree Func" name="pedigree" value={vitals.pedigree} min={0} max={2.5} step={0.1} icon={Activity} onChange={handleSliderChange} />
+            <InputGroup label="Pregnancies" name="pregnancies" value={vitals.pregnancies} min={0} max={15} icon={Activity} onChange={handleSliderChange} />
           </div>
 
           <button
             onClick={handleCheckRisk}
             disabled={isLoading}
-            className="mt-12 group w-full relative z-10 font-headline bg-gradient-to-r from-primary to-primary-container text-[#00354a] font-bold py-4 rounded-xl uppercase tracking-[0.2em] flex items-center justify-center gap-4 transition-all hover-lift neon-glow shadow-lg shadow-sky-500/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-12 w-full bg-[#1A1A2E] hover:bg-[#2A2A3E] text-white font-body font-bold py-5 rounded-2xl text-lg flex items-center justify-center gap-3 transition-all hover-scale shadow-xl shadow-[#1A1A2E]/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Generating AI Plan..." : "Generate AI Risk Plan"}
           </button>
         </div>
 
-        {/* Right Col: Gauge & Score */}
-        <div className="flex flex-col gap-6">
-           {/* Gauge Card */}
-           <div className="glass-card flex-1 min-h-[350px] p-8 rounded-3xl border border-white/5 flex flex-col justify-center items-center relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-8 select-none pointer-events-none opacity-5">
-                <span className="text-8xl font-headline font-black text-white leading-none">RISK</span>
-              </div>
-              <div className="relative w-64 h-64 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle className="text-white/5" cx="128" cy="128" fill="transparent" r={radius} stroke="currentColor" strokeWidth="8"></circle>
+        {/* Right Col: Gauge & Score (40%) */}
+        <div className="lg:col-span-2 flex flex-col gap-6">
+           <div className="premium-card flex-1 min-h-[400px] p-8 flex flex-col justify-center items-center relative overflow-hidden bg-white">
+              <div className="relative w-64 h-64 flex items-center justify-center mb-6">
+                <svg className="w-full h-full transform -rotate-90 drop-shadow-sm">
+                  <circle cx="128" cy="128" fill="transparent" r={radius} stroke="#E5E4E0" strokeWidth="12"></circle>
                   <circle 
-                    className={`${riskResult.color} outline-none drop-shadow-[0_0_12px_rgba(currentColor,0.6)]`} 
                     cx="128" cy="128" 
                     fill="transparent" 
                     r={radius} 
-                    stroke="currentColor" 
+                    stroke={riskResult.hexColor || "#00C9A7"} 
                     strokeDasharray={circumference} 
                     strokeDashoffset={offset} 
                     strokeWidth="12" 
-                    style={{ transition: 'stroke-dashoffset 1s ease-out' }}
+                    style={{ transition: 'stroke-dashoffset 1s ease-out, stroke 0.5s ease' }}
+                    strokeLinecap="round"
                   ></circle>
                 </svg>
-                <div className="absolute flex flex-col items-center">
-                  <span className="text-6xl font-headline font-black text-white">{riskResult.score}</span>
-                  <span className="text-[10px] font-label text-slate-500 uppercase tracking-[0.3em] mt-1">Score / 100</span>
+                <div className="absolute flex flex-col items-center mt-2">
+                  <span className="text-6xl font-headline font-bold text-[#1A1A2E]">{riskResult.score}</span>
+                  <span className="text-xs font-label text-[#7B7B8F] uppercase tracking-[0.2em] font-medium mt-1 pr-1">SCORE / 100</span>
                 </div>
               </div>
              
-              <div className="mt-8 text-center relative z-10 w-full flex justify-center">
-                <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-900 border border-slate-700 text-xs font-bold uppercase tracking-wider relative shadow-inner shadow-black/50">
-                  <span className={`w-2 h-2 rounded-full ${riskResult.color.replace('text-', 'bg-')} shadow-[0_0_8px_currentColor]`}></span>
-                  <span className={riskResult.color}>{riskResult.label}</span>
+              <div className="text-center w-full flex justify-center mb-10">
+                <div 
+                  className="inline-flex items-center gap-2 px-6 py-2 rounded-full font-bold uppercase tracking-wider text-sm border shadow-sm"
+                  style={{ backgroundColor: `${riskResult.hexColor}15`, color: riskResult.hexColor, borderColor: `${riskResult.hexColor}30` }}
+                >
+                  {riskResult.label} Risk
                 </div>
+              </div>
+
+              {/* Mini Breakdown */}
+              <div className="w-full space-y-4 px-2">
+                 <MiniBar label="Glucose Risk" value={((vitals.glucose - 50) / 250) * 100} color="#FF9F1C" />
+                 <MiniBar label="BMI Risk" value={((vitals.bmi - 10) / 40) * 100} color="#00C9A7" />
+                 <MiniBar label="Age Risk" value={(vitals.age / 100) * 100} color="#1A1A2E" />
               </div>
            </div>
 
-           {/* Urgency Alert Card - ONLY SHOW WHEN AI PROCESSED */}
+           {/* Urgency Alert Card */}
            {geminiResult && !isLoading && (
-              <div className={`rounded-2xl p-5 border shadow-lg ${
-                  riskResult.score > 65 
-                    ? "bg-red-500/20 border-red-500/30 text-red-200" 
-                    : riskResult.score > 35 
-                      ? "bg-yellow-500/20 border-yellow-500/30 text-yellow-200"
-                      : "bg-green-500/20 border-green-500/30 text-green-200"
-                }`}>
-                <div className="flex items-center gap-3 mb-2">
-                  <ShieldAlert size={20} />
-                  <h4 className="font-bold">Medical Urgency</h4>
+              <div className="rounded-2xl p-6 border shadow-sm animate-fade-up"
+                   style={{ backgroundColor: `${riskResult.hexColor}10`, borderColor: `${riskResult.hexColor}20` }}>
+                <div className="flex items-center gap-3 mb-2" style={{ color: riskResult.hexColor }}>
+                  <ShieldAlert size={22} />
+                  <h4 className="font-bold font-headline text-lg">Medical Urgency</h4>
                 </div>
-                <p className="text-sm font-medium leading-relaxed">{geminiResult.urgency}</p>
+                <p className="text-[#1A1A2E] text-sm leading-relaxed">{geminiResult.urgency}</p>
               </div>
            )}
         </div>
@@ -176,14 +152,14 @@ export const DiabetesChecker = ({ onResultsChange }) => {
       {isLoading && <LoadingSkeleton />}
 
       {geminiResult && !isLoading && (
-        <div className="grid md:grid-cols-2 gap-4 animate-fade-in">
-          <div className="bg-emerald-900/20 border border-emerald-800/50 rounded-2xl p-6">
-             <h4 className="text-emerald-400 font-bold mb-3 flex items-center gap-2"><Activity size={18}/>Diet Strategy</h4>
-             <p className="text-slate-300 text-sm leading-relaxed">{geminiResult.tip1}</p>
+        <div className="grid md:grid-cols-2 gap-6 animate-fade-up">
+          <div className="premium-card p-8 border-l-4 border-[#00C9A7]">
+             <h4 className="text-[#1A1A2E] font-bold text-lg mb-4 flex items-center gap-2"><Activity size={20} className="text-[#00C9A7]"/> Diet Strategy</h4>
+             <p className="text-[#7B7B8F] leading-relaxed">{geminiResult.tip1}</p>
           </div>
-          <div className="bg-emerald-900/20 border border-emerald-800/50 rounded-2xl p-6">
-             <h4 className="text-emerald-400 font-bold mb-3 flex items-center gap-2"><Heart size={18}/>Lifestyle Change</h4>
-             <p className="text-slate-300 text-sm leading-relaxed">{geminiResult.tip2}</p>
+          <div className="premium-card p-8 border-l-4 border-[#00B4D8]">
+             <h4 className="text-[#1A1A2E] font-bold text-lg mb-4 flex items-center gap-2"><Heart size={20} className="text-[#00B4D8]"/> Lifestyle Change</h4>
+             <p className="text-[#7B7B8F] leading-relaxed">{geminiResult.tip2}</p>
           </div>
         </div>
       )}
@@ -191,21 +167,48 @@ export const DiabetesChecker = ({ onResultsChange }) => {
   );
 };
 
-const InputGroup = ({ label, name, value, min, max, step = 1, icon: Icon, onChange }) => (
-  <div className="space-y-4">
-    <div className="flex justify-between text-xs font-label uppercase tracking-wider">
-      <span className="text-slate-400 flex items-center gap-1.5"><Icon size={14} className="text-slate-500"/>{label}</span>
-      <span className="text-sky-400 font-bold">{value}</span>
+const InputGroup = ({ label, name, value, min, max, step = 1, icon: Icon, onChange }) => {
+  const percentage = ((value - min) / (max - min)) * 100;
+  
+  return (
+    <div className="space-y-4 relative z-10">
+      <div className="flex justify-between font-label text-xs uppercase tracking-widest font-bold">
+        <span className="text-[#7B7B8F] flex items-center gap-1.5"><Icon size={14} className="text-[#00C9A7]"/>{label}</span>
+      </div>
+      <div className="flex items-center justify-between">
+         <span className="text-2xl font-headline font-bold text-[#1A1A2E]">{value}</span>
+      </div>
+      <div className="relative w-full h-1.5 bg-[#E5E4E0] rounded-full">
+         {/* Custom track styling inline for the gradient up to thumb */}
+         <div 
+           className="absolute top-0 left-0 h-full bg-[#00C9A7] rounded-full"
+           style={{ width: `${percentage}%` }}
+         />
+         <input 
+           type="range" 
+           name={name} 
+           min={min} 
+           max={max} 
+           step={step}
+           value={value} 
+           onChange={onChange}
+           className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
+         />
+         {/* Custom visual thumb */}
+         <div 
+           className="absolute top-1/2 -mt-3 w-6 h-6 bg-white border-2 border-[#00C9A7] rounded-full shadow-md pointer-events-none transition-transform"
+           style={{ left: `calc(${percentage}% - 12px)` }}
+         />
+      </div>
     </div>
-    <input 
-      type="range" 
-      name={name} 
-      min={min} 
-      max={max} 
-      step={step}
-      value={value} 
-      onChange={onChange}
-      className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-sky-400"
-    />
+  );
+}
+
+const MiniBar = ({ label, value, color }) => (
+  <div className="flex items-center justify-between text-xs font-label">
+    <span className="text-[#7B7B8F] font-bold w-24 truncate">{label}</span>
+    <div className="flex-1 mx-3 h-1.5 bg-[#E5E4E0] rounded-full overflow-hidden">
+      <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${value}%`, backgroundColor: color }} />
+    </div>
   </div>
 );

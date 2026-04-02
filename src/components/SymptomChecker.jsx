@@ -24,7 +24,6 @@ export const SymptomChecker = ({ onResultsChange }) => {
     setAnalysisResults(null);
     setSelectedSymptoms([]);
 
-    // 1. Natural Language Extraction via Gemini
     const extractionPrompt = `Extract the core medical symptoms from this patient statement: "${searchInput}". 
 Only use exact symptom names from this approved list: ${allSymptoms.join(", ")}.
 If none match perfectly, choose the closest semantic match from the list.
@@ -36,33 +35,36 @@ Respond in exactly this JSON format and nothing else:
     const extractionFallback = { extractedSymptoms: [] };
     const extractedData = await callGeminiAPI(extractionPrompt, extractionFallback);
     
-    if (extractedData?.error === "RATE_LIMIT") {
-      setError("Google Gemini AI Rate Limit Exceeded (15 requests/min). Please wait 45 seconds before clicking Analyze again.");
-      setIsLoading(false);
-      return;
+    let workingSymptoms = extractedData?.extractedSymptoms || [];
+    
+    // OFFLINE FALLBACK: If Gemini is rate-limited (limit:0), use deterministic string matching
+    if (extractedData?.error === "RATE_LIMIT" || workingSymptoms.length === 0) {
+      console.warn("API Rate Limit hit or no symptoms extracted. Falling back to offline dictionary match.");
+      workingSymptoms = allSymptoms.filter(sym => 
+        searchInput.toLowerCase().includes(sym.toLowerCase())
+      );
+      
+      if (workingSymptoms.length === 0) {
+         setError("Google Space/Region API limit hit. Please type exact symptom keywords like 'fever' or 'headache' for the offline engine to match.");
+         setIsLoading(false);
+         return;
+      }
+      
+      // Wipe the error if offline match succeeded
+      setError(null);
     }
 
-    const workingSymptoms = extractedData?.extractedSymptoms || [];
     setSelectedSymptoms(workingSymptoms);
 
-    if (workingSymptoms.length === 0) {
-      setError("We couldn't identify specific symptoms from your description. Please try describing them differently with common medical terms.");
-      setIsLoading(false);
-      return;
-    }
 
-    // 2. Local calculation of disease matches
+
     const matches = calculateDiseaseMatches(workingSymptoms);
     setAnalysisResults(matches);
     
-    if (onResultsChange) {
-      onResultsChange(matches);
-    }
+    if (onResultsChange) onResultsChange(matches);
 
-    // 3. Clinical Insights via Gemini
     if (matches.length > 0) {
       const topDisease = matches[0];
-      
       const prompt = `A patient reports these symptoms: ${workingSymptoms.join(", ")}. The most likely condition is ${topDisease.name} with ${topDisease.confidence}% confidence. Respond in exactly this JSON format:
 {
   "explanation": "2-sentence simple explanation of the condition",
@@ -85,38 +87,36 @@ Respond in exactly this JSON format and nothing else:
   };
 
   return (
-    <div className="space-y-8 pb-8">
-      <div className="glass-card p-6 md:p-8 rounded-3xl relative overflow-hidden">
-        <div className="absolute inset-0 scanline opacity-30 pointer-events-none"></div>
-        <div className="flex items-center gap-3 mb-8 relative z-10">
-          <div className="p-2 bg-sky-500/20 rounded-lg">
-            <Activity className="text-sky-400" size={24} />
+    <div className="flex flex-col items-center pb-8 animate-fade-up">
+      {/* Centered Main Checker Card */}
+      <div className="w-full max-w-3xl glass-panel premium-card p-8 md:p-10 mb-12">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="p-3 bg-white border border-[#E5E4E0] rounded-2xl shadow-sm text-[#00C9A7]">
+            <Activity size={28} strokeWidth={2.5} />
           </div>
-          <h2 className="text-2xl font-headline font-bold text-white tracking-tight">Symptom Checker</h2>
+          <h2 className="text-3xl font-headline text-[#1A1A2E] tracking-tight">Symptom Checker</h2>
         </div>
         
-        {/* Natural Language Text Area */}
-        <div className="relative group mb-6 z-10 w-full">
+        <div className="relative group mb-8">
            <textarea
-             rows="3"
-             className="w-full bg-surface-container-lowest border border-white/5 focus:border-sky-500 transition-all p-5 rounded-2xl text-white placeholder:text-slate-500 focus:ring-0 font-body resize-none shadow-inner"
-             placeholder="Describe your symptoms in a few sentences... (e.g., 'I have been having a severe headache since this morning and I am feeling very nauseous and dizzy.')"
+             rows="4"
+             className="w-full bg-[#F9F9F8] border border-[#E5E4E0] focus:border-[#00C9A7] transition-all p-6 rounded-2xl text-[#1A1A2E] placeholder:text-[#7B7B8F] focus:ring-4 focus:ring-[#00C9A7]/10 font-body text-lg resize-none shadow-sm"
+             placeholder="Describe your symptoms naturally... (e.g., 'I have a sharp pain in my lower back, and a slight fever.')"
              value={searchInput}
              onChange={(e) => setSearchInput(e.target.value)}
              disabled={isLoading}
            />
-           <div className="absolute top-4 right-4 text-sky-500/50 group-focus-within:text-sky-400 transition-colors pointer-events-none">
-             <Sparkles size={20} />
+           <div className="absolute top-6 right-6 text-[#00C9A7] transition-all group-focus-within:scale-110 pointer-events-none">
+             <Sparkles size={24} />
            </div>
         </div>
 
-        {/* Extracted Symptoms Tag Display */}
         {selectedSymptoms.length > 0 && (
-          <div className="mb-8 relative z-10 animate-fade-in">
-            <p className="text-xs font-label text-slate-500 uppercase tracking-[0.1em] mb-3">AI Extracted Symptoms:</p>
+          <div className="mb-8 animate-fade-up">
+            <p className="text-xs font-label text-[#7B7B8F] uppercase tracking-[0.1em] mb-3">Extracted Bio-Markers</p>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map((sym, idx) => (
-                <div key={idx} className="bg-sky-500/20 text-sky-300 border border-sky-500/30 px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-medium lowercase shadow-[0_0_8px_rgba(56,189,248,0.1)]">
+                <div key={idx} className="bg-white border border-[#00C9A7]/30 text-[#00C9A7] px-4 py-2 rounded-full text-sm font-medium shadow-sm">
                   {sym}
                 </div>
               ))}
@@ -124,36 +124,42 @@ Respond in exactly this JSON format and nothing else:
           </div>
         )}
 
-        {/* Error Display */}
         {error && (
-          <div className="mb-6 relative z-10 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl flex items-start gap-3">
-            <AlertTriangle size={18} className="shrink-0 mt-0.5" />
-            <p>{error}</p>
+          <div className="mb-8 p-4 bg-[#ef4444]/5 border border-[#ef4444]/20 text-[#ef4444] rounded-xl flex items-start gap-3">
+            <AlertTriangle size={20} className="shrink-0 mt-0.5" />
+            <p className="text-sm font-medium">{error}</p>
           </div>
         )}
 
         <button
           onClick={handleAnalyze}
           disabled={searchInput.trim().length === 0 || isLoading}
-          className="w-full bg-gradient-to-r from-primary to-primary-container text-[#00354a] font-headline font-black py-4 rounded-xl uppercase tracking-widest flex items-center justify-center gap-3 active:scale-95 hover-lift disabled:opacity-50 disabled:cursor-not-allowed relative z-10"
+          className="w-full bg-gradient-to-r from-[#00C9A7] to-[#00B4D8] text-white font-body font-bold py-5 rounded-2xl text-lg flex items-center justify-center gap-3 transition-all hover-scale shadow-lg shadow-[#00C9A7]/20 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
-            <span className="flex items-center gap-2">Analyzing...</span>
+            <span className="flex items-center gap-2">Analyzing Data...</span>
           ) : (
-            <span className="flex items-center gap-2"><Search size={20} /> Analyze Symptoms</span>
+            <span className="flex items-center gap-2"><Search size={22} /> Analyze Symptoms</span>
           )}
         </button>
       </div>
 
-      {/* Results Section */}
+      {isLoading && (
+        <div className="w-full max-w-3xl mb-12">
+          <h3 className="text-xl font-headline text-[#1A1A2E] mb-6">Running Diagnostic Matrix...</h3>
+          <LoadingSkeleton />
+        </div>
+      )}
+
+      {/* Conditions Grid */}
       {analysisResults && !isLoading && (
-        <div className="space-y-6 animate-fade-in">
-          <div className="flex items-center gap-2 mb-2 p-3 bg-slate-800 rounded-xl border border-slate-700 text-slate-300 text-sm font-medium">
-            <span className="text-xl">⚠️</span> This tool is for informational purposes only and is not a substitute for professional medical advice.
+        <div className="w-full space-y-6 mb-12 animate-fade-up">
+          <div className="flex items-center gap-2 p-3 bg-[#FF9F1C]/10 border border-[#FF9F1C]/30 text-[#FF9F1C] rounded-xl text-sm font-medium">
+            <AlertTriangle size={18} /> For informational purposes only. Not professional medical advice.
           </div>
           
-          <h3 className="text-xl font-bold border-b border-slate-800 pb-2">Top Predicted Conditions</h3>
-          <div className="grid md:grid-cols-3 gap-4">
+          <h3 className="text-2xl font-headline text-[#1A1A2E] mb-4">Possible Conditions</h3>
+          <div className="grid md:grid-cols-3 gap-6">
             {analysisResults.map((disease, idx) => (
               <div key={idx} className={`stagger-${(idx % 3) + 1}`}>
                 <DiseaseCard disease={disease} confidence={disease.confidence} severity={disease.severity} />
@@ -163,65 +169,55 @@ Respond in exactly this JSON format and nothing else:
         </div>
       )}
 
-      {/* Loading Skeleton */}
-      {isLoading && (
-        <div className="mt-8">
-          <h3 className="text-xl font-bold mb-4">Generating AI Insights...</h3>
-          <LoadingSkeleton />
-        </div>
-      )}
-
-      {/* AI Insights Section */}
+      {/* Clinical AI Insights */}
       {geminiResult && !isLoading && (
-        <div className="mt-8 space-y-4 animate-fade-in">
-          <h3 className="text-xl font-bold text-sky-400 flex items-center gap-2">
-            <Info size={20} /> AI Clinical Insights
+        <div className="w-full space-y-6 animate-fade-up">
+          <h3 className="text-2xl font-headline text-[#1A1A2E] flex items-center gap-3">
+            <Info size={28} className="text-[#00B4D8]" /> Clinical AI Breakdown
           </h3>
           
-          <div className="grid md:grid-cols-2 gap-4">
-            {/* Explanation & Specialist */}
-            <div className="space-y-4">
-              <div className="bg-sky-900/20 border border-sky-800 rounded-2xl p-5 hover-lift animate-fade-up stagger-1">
-                <h4 className="font-semibold text-sky-300 mb-2 flex items-center gap-2">
-                  <Activity size={16} /> Overview
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-6">
+              <div className="premium-card p-6 stagger-1">
+                <h4 className="font-bold text-[#1A1A2E] mb-3 flex items-center gap-2">
+                  <Activity size={18} className="text-[#00B4D8]" /> Overview
                 </h4>
-                <p className="text-slate-300 leading-relaxed text-sm">{geminiResult.explanation}</p>
+                <p className="text-[#7B7B8F] leading-relaxed text-sm">{geminiResult.explanation}</p>
               </div>
               
-              <div className="bg-indigo-900/20 border border-indigo-800 rounded-2xl p-5 hover-lift animate-fade-up stagger-2">
-                <h4 className="font-semibold text-indigo-300 mb-2 flex items-center gap-2">
-                  <UserPlus size={16} /> Recommended Specialist
+              <div className="premium-card p-6 stagger-2 bg-[#F9F9F8]">
+                <h4 className="font-bold text-[#1A1A2E] mb-2 flex items-center gap-2">
+                  <UserPlus size={18} className="text-[#00B4D8]" /> Recommended Specialist
                 </h4>
-                <div className="text-lg font-medium text-slate-200">
+                <div className="text-lg font-headline text-[#00C9A7]">
                   {geminiResult.specialist}
                 </div>
               </div>
             </div>
 
-            {/* Next Steps & Red Flags */}
-            <div className="space-y-4">
-              <div className="bg-emerald-900/20 border border-emerald-800 rounded-2xl p-5 hover-lift animate-fade-up stagger-3">
-                <h4 className="font-semibold text-emerald-300 mb-3 flex items-center gap-2">
-                  <CheckCircle size={16} /> Actionable Next Steps
+            <div className="space-y-6">
+              <div className="premium-card p-6 border-t-4 border-[#00C9A7] stagger-3">
+                <h4 className="font-bold text-[#1A1A2E] mb-4 flex items-center gap-2">
+                  <CheckCircle size={18} className="text-[#00C9A7]" /> Actionable Steps
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {geminiResult.nextSteps?.map((step, i) => (
-                    <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
-                      <span className="text-emerald-500 font-bold mt-0.5">•</span>
+                    <li key={i} className="text-[#7B7B8F] text-sm flex items-start gap-3">
+                      <span className="text-[#00C9A7] font-bold">•</span>
                       <span>{step}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="bg-red-900/20 border border-red-800 rounded-2xl p-5 hover-lift animate-fade-up stagger-1">
-                <h4 className="font-semibold text-red-300 mb-3 flex items-center gap-2">
-                  <AlertTriangle size={16} /> Red Flags to Watch For
+              <div className="premium-card p-6 border-t-4 border-[#ef4444] stagger-1">
+                <h4 className="font-bold text-[#1A1A2E] mb-4 flex items-center gap-2">
+                  <AlertTriangle size={18} className="text-[#ef4444]" /> Red Flags to Watch
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-3">
                   {geminiResult.redFlags?.map((flag, i) => (
-                    <li key={i} className="text-red-200 text-sm flex items-start gap-2 font-medium">
-                      <span className="text-red-500 font-bold mt-0.5">!</span>
+                    <li key={i} className="text-[#7B7B8F] text-sm flex items-start gap-3">
+                      <span className="text-[#ef4444] font-bold">!</span>
                       <span>{flag}</span>
                     </li>
                   ))}
