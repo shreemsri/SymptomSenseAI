@@ -19,6 +19,9 @@ export const callGeminiAPI = async (prompt, fallbackResponse) => {
     });
     
     if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error("RATE_LIMIT");
+      }
       throw new Error(`API error: ${response.status}`);
     }
     
@@ -35,6 +38,9 @@ export const callGeminiAPI = async (prompt, fallbackResponse) => {
     
   } catch (error) {
     console.error("Gemini API call failed:", error);
+    if (error.message === "RATE_LIMIT") {
+      return { ...fallbackResponse, error: "RATE_LIMIT" };
+    }
     return fallbackResponse;
   }
 };

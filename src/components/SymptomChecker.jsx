@@ -36,6 +36,12 @@ Respond in exactly this JSON format and nothing else:
     const extractionFallback = { extractedSymptoms: [] };
     const extractedData = await callGeminiAPI(extractionPrompt, extractionFallback);
     
+    if (extractedData?.error === "RATE_LIMIT") {
+      setError("Google Gemini AI Rate Limit Exceeded (15 requests/min). Please wait 45 seconds before clicking Analyze again.");
+      setIsLoading(false);
+      return;
+    }
+
     const workingSymptoms = extractedData?.extractedSymptoms || [];
     setSelectedSymptoms(workingSymptoms);
 
