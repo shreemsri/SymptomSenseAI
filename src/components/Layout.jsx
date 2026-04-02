@@ -1,21 +1,21 @@
-import { Activity, Heart, LayoutDashboard } from "lucide-react";
+import { Brain, Activity, UserCircle, LogOut, Sun, Moon } from "lucide-react";
 
-export const Layout = ({ children, activeTab, setActiveTab }) => {
+export const Layout = ({ children, activeTab, setActiveTab, onNavigate, isDark, toggleTheme }) => {
   const navItems = [
-    { id: "checker", label: "DIAGNOSTICS", icon: Activity },
-    { id: "diabetes", label: "RISK ANALYSIS", icon: Heart },
-    { id: "dashboard", label: "PATIENT HISTORY", icon: LayoutDashboard },
+    { id: "checker", label: "Diagnostics", icon: Brain },
+    { id: "diabetes", label: "Risk Analysis", icon: Activity },
+    { id: "dashboard", label: "Patient History", icon: UserCircle },
   ];
 
   return (
-    <div className="bg-[#F5F4F0] text-[#1A1A2E] font-body selection:bg-[#00C9A7]/20 selection:text-[#1A1A2E] overflow-x-hidden min-h-screen">
-      <nav className="fixed top-0 w-full flex justify-between items-center px-8 py-4 bg-white/70 backdrop-blur-xl border-b border-[#E5E4E0] z-50 transition-all">
+    <div className="bg-background text-on-surface font-body selection:bg-primary/20 selection:text-on-surface overflow-x-hidden min-h-screen transition-colors duration-300">
+      <nav className="fixed top-0 w-full flex justify-between items-center px-8 py-4 bg-surface/70 backdrop-blur-xl border-b border-surface-container-highest z-50 transition-all">
         <div className="flex items-center gap-3">
-          <span className="text-2xl font-headline font-bold text-[#1A1A2E]">SymptomSense</span>
+          <span className="text-2xl font-headline font-bold text-on-surface">SymptomSense</span>
         </div>
         
         {/* Desktop Nav - Centered Pills */}
-        <div className="hidden md:flex items-center gap-2 bg-[#F9F9F8] p-1.5 rounded-full border border-[#E5E4E0]">
+        <div className="hidden md:flex items-center gap-2 bg-surface-container-low p-1.5 rounded-full border border-surface-container-highest">
           {navItems.map((item) => {
             const isActive = activeTab === item.id;
             return (
@@ -23,7 +23,7 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
                 className={`font-label text-xs tracking-wider uppercase font-bold px-6 py-2 rounded-full transition-all duration-300 ${
-                  isActive ? "bg-white text-[#1A1A2E] shadow-sm border border-[#E5E4E0]/50" : "text-[#7B7B8F] hover:text-[#1A1A2E]"
+                  isActive ? "bg-surface text-on-surface shadow-sm border border-surface-container-highest" : "text-on-surface/50 hover:text-on-surface"
                 }`}
               >
                 {item.label}
@@ -32,13 +32,21 @@ export const Layout = ({ children, activeTab, setActiveTab }) => {
           })}
         </div>
 
-        <button className="bg-[#00C9A7] text-white px-6 py-2.5 rounded-full font-label font-bold text-sm shadow-md hover:bg-[#00B4D8] hover-scale transition-colors">
-          Download Report
-        </button>
+        <div className="flex items-center gap-3">
+          <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface">
+            {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <button onClick={() => onNavigate('landing')} className="hidden sm:flex p-2 rounded-full text-on-surface/50 hover:text-red-500 hover:bg-red-50 transition-colors">
+            <LogOut size={20} />
+          </button>
+          <button className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label font-bold text-sm shadow-md hover:bg-primary/90 transition-colors">
+            Download Report
+          </button>
+        </div>
       </nav>
 
       {/* Mobile Nav */}
-      <div className="md:hidden fixed bottom-0 w-full flex justify-around p-3 border-t border-[#E5E4E0] bg-white/90 backdrop-blur-xl z-50">
+      <div className="md:hidden fixed bottom-0 w-full flex justify-around p-3 border-t border-surface-container-highest bg-surface/90 backdrop-blur-xl z-50">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;

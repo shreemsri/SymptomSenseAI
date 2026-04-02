@@ -91,32 +91,32 @@ Respond in exactly this JSON format and nothing else:
       {/* Centered Main Checker Card */}
       <div className="w-full max-w-3xl glass-panel premium-card p-8 md:p-10 mb-12">
         <div className="flex items-center gap-4 mb-6">
-          <div className="p-3 bg-white border border-[#E5E4E0] rounded-2xl shadow-sm text-[#00C9A7]">
+          <div className="p-3 bg-surface border border-surface-container-highest rounded-2xl shadow-sm text-[#00C9A7]">
             <Activity size={28} strokeWidth={2.5} />
           </div>
-          <h2 className="text-3xl font-headline text-[#1A1A2E] tracking-tight">Symptom Checker</h2>
+          <h2 className="text-3xl font-headline text-on-surface tracking-tight">Symptom Checker</h2>
         </div>
         
         <div className="relative group mb-8">
            <textarea
              rows="4"
-             className="w-full bg-[#F9F9F8] border border-[#E5E4E0] focus:border-[#00C9A7] transition-all p-6 rounded-2xl text-[#1A1A2E] placeholder:text-[#7B7B8F] focus:ring-4 focus:ring-[#00C9A7]/10 font-body text-lg resize-none shadow-sm"
+             className="w-full bg-surface-container-low border border-surface-container-highest focus:border-primary transition-all p-6 rounded-2xl text-on-surface placeholder:text-on-surface/50 focus:ring-4 focus:ring-primary/10 font-body text-lg resize-none shadow-sm"
              placeholder="Describe your symptoms naturally... (e.g., 'I have a sharp pain in my lower back, and a slight fever.')"
              value={searchInput}
              onChange={(e) => setSearchInput(e.target.value)}
              disabled={isLoading}
            />
-           <div className="absolute top-6 right-6 text-[#00C9A7] transition-all group-focus-within:scale-110 pointer-events-none">
+           <div className="absolute top-6 right-6 text-primary transition-all group-focus-within:scale-110 pointer-events-none">
              <Sparkles size={24} />
            </div>
         </div>
 
         {selectedSymptoms.length > 0 && (
           <div className="mb-8 animate-fade-up">
-            <p className="text-xs font-label text-[#7B7B8F] uppercase tracking-[0.1em] mb-3">Extracted Bio-Markers</p>
+            <p className="text-xs font-label text-on-surface/50 uppercase tracking-[0.1em] mb-3">Extracted Bio-Markers</p>
             <div className="flex flex-wrap gap-2">
               {selectedSymptoms.map((sym, idx) => (
-                <div key={idx} className="bg-white border border-[#00C9A7]/30 text-[#00C9A7] px-4 py-2 rounded-full text-sm font-medium shadow-sm">
+                <div key={idx} className="bg-surface border border-[#00C9A7]/30 text-[#00C9A7] px-4 py-2 rounded-full text-sm font-medium shadow-sm">
                   {sym}
                 </div>
               ))}
@@ -146,7 +146,7 @@ Respond in exactly this JSON format and nothing else:
 
       {isLoading && (
         <div className="w-full max-w-3xl mb-12">
-          <h3 className="text-xl font-headline text-[#1A1A2E] mb-6">Running Diagnostic Matrix...</h3>
+          <h3 className="text-xl font-headline text-on-surface mb-6">Running Diagnostic Matrix...</h3>
           <LoadingSkeleton />
         </div>
       )}
@@ -158,7 +158,7 @@ Respond in exactly this JSON format and nothing else:
             <AlertTriangle size={18} /> For informational purposes only. Not professional medical advice.
           </div>
           
-          <h3 className="text-2xl font-headline text-[#1A1A2E] mb-4">Possible Conditions</h3>
+          <h3 className="text-2xl font-headline text-on-surface mb-4">Possible Conditions</h3>
           <div className="grid md:grid-cols-3 gap-6">
             {analysisResults.map((disease, idx) => (
               <div key={idx} className={`stagger-${(idx % 3) + 1}`}>
@@ -172,21 +172,21 @@ Respond in exactly this JSON format and nothing else:
       {/* Clinical AI Insights */}
       {geminiResult && !isLoading && (
         <div className="w-full space-y-6 animate-fade-up">
-          <h3 className="text-2xl font-headline text-[#1A1A2E] flex items-center gap-3">
+          <h3 className="text-2xl font-headline text-on-surface flex items-center gap-3">
             <Info size={28} className="text-[#00B4D8]" /> Clinical AI Breakdown
           </h3>
           
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-6">
               <div className="premium-card p-6 stagger-1">
-                <h4 className="font-bold text-[#1A1A2E] mb-3 flex items-center gap-2">
+                <h4 className="font-bold text-on-surface mb-3 flex items-center gap-2">
                   <Activity size={18} className="text-[#00B4D8]" /> Overview
                 </h4>
-                <p className="text-[#7B7B8F] leading-relaxed text-sm">{geminiResult.explanation}</p>
+                <p className="text-on-surface/50 leading-relaxed text-sm">{geminiResult.explanation}</p>
               </div>
               
-              <div className="premium-card p-6 stagger-2 bg-[#F9F9F8]">
-                <h4 className="font-bold text-[#1A1A2E] mb-2 flex items-center gap-2">
+              <div className="premium-card p-6 stagger-2 bg-surface-container-low">
+                <h4 className="font-bold text-on-surface mb-2 flex items-center gap-2">
                   <UserPlus size={18} className="text-[#00B4D8]" /> Recommended Specialist
                 </h4>
                 <div className="text-lg font-headline text-[#00C9A7]">
@@ -197,12 +197,12 @@ Respond in exactly this JSON format and nothing else:
 
             <div className="space-y-6">
               <div className="premium-card p-6 border-t-4 border-[#00C9A7] stagger-3">
-                <h4 className="font-bold text-[#1A1A2E] mb-4 flex items-center gap-2">
+                <h4 className="font-bold text-on-surface mb-4 flex items-center gap-2">
                   <CheckCircle size={18} className="text-[#00C9A7]" /> Actionable Steps
                 </h4>
                 <ul className="space-y-3">
                   {geminiResult.nextSteps?.map((step, i) => (
-                    <li key={i} className="text-[#7B7B8F] text-sm flex items-start gap-3">
+                    <li key={i} className="text-on-surface/50 text-sm flex items-start gap-3">
                       <span className="text-[#00C9A7] font-bold">•</span>
                       <span>{step}</span>
                     </li>
@@ -211,12 +211,12 @@ Respond in exactly this JSON format and nothing else:
               </div>
 
               <div className="premium-card p-6 border-t-4 border-[#ef4444] stagger-1">
-                <h4 className="font-bold text-[#1A1A2E] mb-4 flex items-center gap-2">
+                <h4 className="font-bold text-on-surface mb-4 flex items-center gap-2">
                   <AlertTriangle size={18} className="text-[#ef4444]" /> Red Flags to Watch
                 </h4>
                 <ul className="space-y-3">
                   {geminiResult.redFlags?.map((flag, i) => (
-                    <li key={i} className="text-[#7B7B8F] text-sm flex items-start gap-3">
+                    <li key={i} className="text-on-surface/50 text-sm flex items-start gap-3">
                       <span className="text-[#ef4444] font-bold">!</span>
                       <span>{flag}</span>
                     </li>

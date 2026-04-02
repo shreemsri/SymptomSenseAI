@@ -16,7 +16,7 @@ export const DiabetesChecker = ({ onResultsChange }) => {
     pedigree: 0.5
   });
 
-  const [riskResult, setRiskResult] = useState({ score: 0, label: "Unknown", color: "text-[#7B7B8F]" });
+  const [riskResult, setRiskResult] = useState({ score: 0, label: "Unknown", color: "text-on-surface/50" });
   const [geminiResult, setGeminiResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -70,8 +70,8 @@ export const DiabetesChecker = ({ onResultsChange }) => {
         {/* Left Col: Inputs (60%) */}
         <div className="lg:col-span-3 premium-card p-6 md:p-10 mb-2">
           <div className="mb-8">
-            <h2 className="text-3xl font-headline text-[#1A1A2E] tracking-tight">Vitals & Assessment</h2>
-            <p className="text-[#7B7B8F] text-sm mt-2">Adjust your clinical biomarkers to calculate risk.</p>
+            <h2 className="text-3xl font-headline text-on-surface tracking-tight">Vitals & Assessment</h2>
+            <p className="text-on-surface/50 text-sm mt-2">Adjust your clinical biomarkers to calculate risk.</p>
           </div>
           
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-8">
@@ -88,7 +88,7 @@ export const DiabetesChecker = ({ onResultsChange }) => {
           <button
             onClick={handleCheckRisk}
             disabled={isLoading}
-            className="mt-12 w-full bg-[#1A1A2E] hover:bg-[#2A2A3E] text-white font-body font-bold py-5 rounded-2xl text-lg flex items-center justify-center gap-3 transition-all hover-scale shadow-xl shadow-[#1A1A2E]/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="mt-12 w-full bg-on-surface hover:bg-on-surface/90 text-surface font-body font-bold py-5 rounded-2xl text-lg flex items-center justify-center gap-3 transition-all hover-scale shadow-xl shadow-[#1A1A2E]/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? "Generating AI Plan..." : "Generate AI Risk Plan"}
           </button>
@@ -96,7 +96,7 @@ export const DiabetesChecker = ({ onResultsChange }) => {
 
         {/* Right Col: Gauge & Score (40%) */}
         <div className="lg:col-span-2 flex flex-col gap-6">
-           <div className="premium-card flex-1 min-h-[400px] p-8 flex flex-col justify-center items-center relative overflow-hidden bg-white">
+           <div className="premium-card flex-1 min-h-[400px] p-8 flex flex-col justify-center items-center relative overflow-hidden bg-surface">
               <div className="relative w-64 h-64 flex items-center justify-center mb-6">
                 <svg className="w-full h-full transform -rotate-90 drop-shadow-sm">
                   <circle cx="128" cy="128" fill="transparent" r={radius} stroke="#E5E4E0" strokeWidth="12"></circle>
@@ -113,8 +113,8 @@ export const DiabetesChecker = ({ onResultsChange }) => {
                   ></circle>
                 </svg>
                 <div className="absolute flex flex-col items-center mt-2">
-                  <span className="text-6xl font-headline font-bold text-[#1A1A2E]">{riskResult.score}</span>
-                  <span className="text-xs font-label text-[#7B7B8F] uppercase tracking-[0.2em] font-medium mt-1 pr-1">SCORE / 100</span>
+                  <span className="text-6xl font-headline font-bold text-on-surface">{riskResult.score}</span>
+                  <span className="text-xs font-label text-on-surface/50 uppercase tracking-[0.2em] font-medium mt-1 pr-1">SCORE / 100</span>
                 </div>
               </div>
              
@@ -143,7 +143,7 @@ export const DiabetesChecker = ({ onResultsChange }) => {
                   <ShieldAlert size={22} />
                   <h4 className="font-bold font-headline text-lg">Medical Urgency</h4>
                 </div>
-                <p className="text-[#1A1A2E] text-sm leading-relaxed">{geminiResult.urgency}</p>
+                <p className="text-on-surface text-sm leading-relaxed">{geminiResult.urgency}</p>
               </div>
            )}
         </div>
@@ -153,13 +153,13 @@ export const DiabetesChecker = ({ onResultsChange }) => {
 
       {geminiResult && !isLoading && (
         <div className="grid md:grid-cols-2 gap-6 animate-fade-up">
-          <div className="premium-card p-8 border-l-4 border-[#00C9A7]">
-             <h4 className="text-[#1A1A2E] font-bold text-lg mb-4 flex items-center gap-2"><Activity size={20} className="text-[#00C9A7]"/> Diet Strategy</h4>
-             <p className="text-[#7B7B8F] leading-relaxed">{geminiResult.tip1}</p>
+          <div className="premium-card p-8 border-l-4 border-primary">
+             <h4 className="text-on-surface font-bold text-lg mb-4 flex items-center gap-2"><Activity size={20} className="text-primary"/> Diet Strategy</h4>
+             <p className="text-on-surface/50 leading-relaxed">{geminiResult.tip1}</p>
           </div>
-          <div className="premium-card p-8 border-l-4 border-[#00B4D8]">
-             <h4 className="text-[#1A1A2E] font-bold text-lg mb-4 flex items-center gap-2"><Heart size={20} className="text-[#00B4D8]"/> Lifestyle Change</h4>
-             <p className="text-[#7B7B8F] leading-relaxed">{geminiResult.tip2}</p>
+          <div className="premium-card p-8 border-l-4 border-surface-container-highest">
+             <h4 className="text-on-surface font-bold text-lg mb-4 flex items-center gap-2"><Heart size={20} className="text-secondary"/> Lifestyle Change</h4>
+             <p className="text-on-surface/50 leading-relaxed">{geminiResult.tip2}</p>
           </div>
         </div>
       )}
@@ -173,15 +173,15 @@ const InputGroup = ({ label, name, value, min, max, step = 1, icon: Icon, onChan
   return (
     <div className="space-y-4 relative z-10">
       <div className="flex justify-between font-label text-xs uppercase tracking-widest font-bold">
-        <span className="text-[#7B7B8F] flex items-center gap-1.5"><Icon size={14} className="text-[#00C9A7]"/>{label}</span>
+        <span className="text-on-surface/50 flex items-center gap-1.5"><Icon size={14} className="text-[#00C9A7]"/>{label}</span>
       </div>
       <div className="flex items-center justify-between">
-         <span className="text-2xl font-headline font-bold text-[#1A1A2E]">{value}</span>
+         <span className="text-2xl font-headline font-bold text-on-surface">{value}</span>
       </div>
       <div className="relative w-full h-1.5 bg-[#E5E4E0] rounded-full">
          {/* Custom track styling inline for the gradient up to thumb */}
          <div 
-           className="absolute top-0 left-0 h-full bg-[#00C9A7] rounded-full"
+           className="absolute top-0 left-0 h-full bg-primary rounded-full"
            style={{ width: `${percentage}%` }}
          />
          <input 
@@ -196,7 +196,7 @@ const InputGroup = ({ label, name, value, min, max, step = 1, icon: Icon, onChan
          />
          {/* Custom visual thumb */}
          <div 
-           className="absolute top-1/2 -mt-3 w-6 h-6 bg-white border-2 border-[#00C9A7] rounded-full shadow-md pointer-events-none transition-transform"
+           className="absolute top-1/2 -mt-3 w-6 h-6 bg-surface border-2 border-[#00C9A7] rounded-full shadow-md pointer-events-none transition-transform"
            style={{ left: `calc(${percentage}% - 12px)` }}
          />
       </div>
@@ -206,7 +206,7 @@ const InputGroup = ({ label, name, value, min, max, step = 1, icon: Icon, onChan
 
 const MiniBar = ({ label, value, color }) => (
   <div className="flex items-center justify-between text-xs font-label">
-    <span className="text-[#7B7B8F] font-bold w-24 truncate">{label}</span>
+    <span className="text-on-surface/50 font-bold w-24 truncate">{label}</span>
     <div className="flex-1 mx-3 h-1.5 bg-[#E5E4E0] rounded-full overflow-hidden">
       <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${value}%`, backgroundColor: color }} />
     </div>

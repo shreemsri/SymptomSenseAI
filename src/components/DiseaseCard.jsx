@@ -16,11 +16,11 @@ export const DiseaseCard = ({ disease, confidence, severity }) => {
     <div className={`premium-card premium-card-hover p-6 relative overflow-hidden animate-fade-up`}>
       <div className="flex justify-between items-start mb-4 relative z-10">
         <div>
-          <h3 className="text-lg font-headline text-[#1A1A2E] flex items-center gap-2">
+          <h3 className="text-lg font-headline text-on-surface flex items-center gap-2">
             <span className="material-symbols-outlined text-[#00C9A7]">vital_signs</span>
             {disease.name}
           </h3>
-          <p className="text-xs font-label text-[#7B7B8F] mt-1">Specialist: {disease.specialist}</p>
+          <p className="text-xs font-label text-on-surface/50 mt-1">Specialist: {disease.specialist}</p>
         </div>
         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] uppercase font-bold border ${severityBadge}`}>
           <AlertTriangle size={12} strokeWidth={2.5} />
@@ -30,10 +30,10 @@ export const DiseaseCard = ({ disease, confidence, severity }) => {
       
       <div className="space-y-2 relative z-10">
         <div className="flex justify-between font-label text-xs">
-          <span className="text-[#7B7B8F]">Confidence Match</span>
-          <span className="font-bold text-[#1A1A2E]">{confidence}%</span>
+          <span className="text-on-surface/50">Confidence Match</span>
+          <span className="font-bold text-on-surface">{confidence}%</span>
         </div>
-        <div className="h-2 w-full bg-[#E5E4E0] rounded-full overflow-hidden">
+        <div className="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
           <div 
             className={`h-full rounded-full ${barColor} transition-all duration-1000 ease-out`} 
             style={{ width: `${confidence}%` }}

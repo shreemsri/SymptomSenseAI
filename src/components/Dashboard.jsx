@@ -97,26 +97,26 @@ Provide a composite health recommendation based on both results combined. Respon
              <path d="M30 50 Q50 20 70 50 T70 80 Q50 90 30 80 Z" fill="#00C9A7" opacity="0.1"/>
              <path d="M50 35 V65 M35 50 H65" stroke="#00C9A7" strokeWidth="4" strokeLinecap="round" opacity="0.8"/>
            </svg>
-           <div className="absolute -bottom-2 -right-2 bg-white rounded-full p-2 shadow-sm border border-[#E5E4E0]">
+           <div className="absolute -bottom-2 -right-2 bg-surface rounded-full p-2 shadow-sm border border-surface-container-highest">
              <BrainCircuit size={20} className="text-[#FF9F1C]" />
            </div>
         </div>
         
-        <h2 className="text-4xl font-headline font-bold text-[#1A1A2E]">Your Health Story Starts Here</h2>
-        <p className="text-[#7B7B8F] max-w-md text-lg">
+        <h2 className="text-4xl font-headline font-bold text-on-surface">Your Health Story Starts Here</h2>
+        <p className="text-on-surface/50 max-w-md text-lg">
           Complete the Symptom Checker and Diabetes Risk assessments to unlock your full AI health report.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full max-w-md">
           <button 
             onClick={() => onNavigate('checker')}
-            className="flex-1 px-6 py-4 bg-[#00C9A7] text-white rounded-xl font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2 hover-scale shadow-md shadow-[#00C9A7]/20"
+            className="flex-1 px-6 py-4 bg-primary text-white rounded-xl font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2 hover-scale shadow-md shadow-[#00C9A7]/20"
           >
             Check Symptoms <ArrowRight size={16} />
           </button>
           <button 
             onClick={() => onNavigate('diabetes')}
-            className="flex-1 px-6 py-4 bg-white border-2 border-[#E5E4E0] text-[#1A1A2E] rounded-xl font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2 hover-scale shadow-sm"
+            className="flex-1 px-6 py-4 bg-surface border-2 border-surface-container-highest text-on-surface rounded-xl font-bold uppercase tracking-wider text-sm flex items-center justify-center gap-2 hover-scale shadow-sm"
           >
             Analyze Risk <ArrowRight size={16} />
           </button>
@@ -180,13 +180,13 @@ Provide a composite health recommendation based on both results combined. Respon
     <div className="space-y-8 pb-10 animate-fade-up">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
         <div>
-          <h2 className="text-3xl font-headline font-bold text-[#1A1A2E] tracking-tight">Patient Dashboard</h2>
-          <p className="text-[#7B7B8F] text-sm mt-1">AI synthesized health and biomarker tracking.</p>
+          <h2 className="text-3xl font-headline font-bold text-on-surface tracking-tight">Patient Dashboard</h2>
+          <p className="text-on-surface/50 text-sm mt-1">AI synthesized health and biomarker tracking.</p>
         </div>
         <button 
           onClick={handleDownload}
           disabled={isLoading}
-          className="flex items-center gap-2 font-label text-sm px-6 py-3 bg-white border border-[#E5E4E0] text-[#1A1A2E] font-bold rounded-xl hover-scale shadow-sm disabled:opacity-50"
+          className="flex items-center gap-2 font-label text-sm px-6 py-3 bg-surface border border-surface-container-highest text-on-surface font-bold rounded-xl hover-scale shadow-sm disabled:opacity-50"
         >
           <Download size={18} className="text-[#00C9A7]" /> Export Summary
         </button>
@@ -198,16 +198,16 @@ Provide a composite health recommendation based on both results combined. Respon
         <div className="flex flex-col gap-6 lg:col-span-1">
           {/* Health Score Main Card */}
           <div className="premium-card p-8 flex flex-col items-center justify-center text-center">
-            <h3 className="text-[#7B7B8F] font-label text-xs uppercase tracking-[0.2em] mb-4 font-bold">Overall Wellness</h3>
+            <h3 className="text-on-surface/50 font-label text-xs uppercase tracking-[0.2em] mb-4 font-bold">Overall Wellness</h3>
             <div className={`text-7xl font-headline font-bold mb-2`} style={{ color: scoreColor }}>{healthScore}</div>
-            <p className="text-xs text-[#7B7B8F] font-medium">Out of 100 points</p>
+            <p className="text-xs text-on-surface/50 font-medium">Out of 100 points</p>
           </div>
 
           <div className="premium-card p-6 border-l-4 border-l-[#00B4D8]">
              <div className="flex justify-between items-start mb-2">
-               <span className="text-[10px] text-[#7B7B8F] font-bold tracking-widest uppercase">SYMPTOM CHECK</span>
+               <span className="text-[10px] text-on-surface/50 font-bold tracking-widest uppercase">SYMPTOM CHECK</span>
              </div>
-             <h4 className="text-[#1A1A2E] font-headline text-xl font-bold truncate">
+             <h4 className="text-on-surface font-headline text-xl font-bold truncate">
                {symptomResults[0].name}
              </h4>
              <div className="mt-1 text-[#00B4D8] text-xs font-bold uppercase tracking-wider">
@@ -217,9 +217,9 @@ Provide a composite health recommendation based on both results combined. Respon
 
           <div className="premium-card p-6 border-l-4" style={{ borderLeftColor: diabetesResults.hexColor || '#FF9F1C' }}>
              <div className="flex justify-between items-start mb-2">
-               <span className="text-[10px] text-[#7B7B8F] font-bold tracking-widest uppercase">RISK SCORE</span>
+               <span className="text-[10px] text-on-surface/50 font-bold tracking-widest uppercase">RISK SCORE</span>
              </div>
-             <h4 className="text-[#1A1A2E] font-headline text-xl font-bold">
+             <h4 className="text-on-surface font-headline text-xl font-bold">
                {diabetesResults.score}/100
              </h4>
              <div className={`mt-1 text-xs font-bold uppercase tracking-wider`} style={{ color: diabetesResults.hexColor || '#FF9F1C' }}>
@@ -230,8 +230,8 @@ Provide a composite health recommendation based on both results combined. Respon
 
         {/* Radar Chart Panel */}
         <div className="lg:col-span-2 premium-card p-8 flex flex-col min-h-[400px]">
-           <h3 className="text-[#1A1A2E] font-headline text-xl font-bold mb-6">Biomarker Health</h3>
-           <div className="flex-1 w-full bg-[#F9F9F8] rounded-2xl border border-[#E5E4E0] p-4 flex items-center justify-center">
+           <h3 className="text-on-surface font-headline text-xl font-bold mb-6">Biomarker Health</h3>
+           <div className="flex-1 w-full bg-surface-container-low rounded-2xl border border-surface-container-highest p-4 flex items-center justify-center">
              <div className="w-full h-full max-h-[350px]">
                <Radar data={radarData} options={radarOptions} />
              </div>
@@ -243,32 +243,32 @@ Provide a composite health recommendation based on both results combined. Respon
 
       {recommendation && !isLoading && (
         <div className="premium-card mt-8 p-8 md:p-10 border-t-8 border-t-[#00C9A7]">
-          <h3 className="text-3xl font-headline font-bold text-[#1A1A2E] mb-8 flex items-center gap-3">
+          <h3 className="text-3xl font-headline font-bold text-on-surface mb-8 flex items-center gap-3">
              <BrainCircuit size={32} className="text-[#00C9A7]" />
              AI Synthesis Report
           </h3>
 
           <div className="space-y-8">
-            <div className="bg-[#F9F9F8] p-6 rounded-2xl border border-[#E5E4E0]">
-              <h4 className="text-[#7B7B8F] font-label font-bold mb-3 uppercase text-xs tracking-[0.2em] flex items-center gap-2">
+            <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant">
+              <h4 className="text-on-surface/60 font-label font-bold mb-3 uppercase text-xs tracking-[0.2em] flex items-center gap-2">
                 Executive Narrative
               </h4>
-              <p className="text-[#1A1A2E] leading-relaxed text-lg font-headline">
+              <p className="text-on-surface leading-relaxed text-lg font-headline">
                 {recommendation.summary}
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 gap-6">
-               <div className="p-6 rounded-2xl border border-[#E5E4E0]">
+               <div className="p-6 rounded-2xl border border-surface-container-highest bg-surface">
                   <h4 className="text-[#FF9F1C] font-label font-bold mb-2 uppercase text-xs tracking-[0.2em]">Urgent Priority</h4>
-                  <div className="text-[#1A1A2E] text-sm leading-relaxed mt-2">
+                  <div className="text-on-surface text-sm leading-relaxed mt-2">
                     {recommendation.priority}
                   </div>
                </div>
-               <div className="bg-[#00C9A7]/10 p-6 rounded-2xl border border-[#00C9A7]/20">
-                  <h4 className="text-[#00C9A7] font-label font-bold mb-2 uppercase text-xs tracking-[0.2em]">Key Next Step</h4>
-                  <div className="text-[#1A1A2E] text-sm leading-relaxed mt-2 font-bold flex items-start gap-2">
-                    <CheckCircle className="text-[#00C9A7] shrink-0" size={18} />
+               <div className="bg-primary/10 p-6 rounded-2xl border border-primary/20">
+                  <h4 className="text-primary font-label font-bold mb-2 uppercase text-xs tracking-[0.2em]">Key Next Step</h4>
+                  <div className="text-on-surface text-sm leading-relaxed mt-2 font-bold flex items-start gap-2">
+                    <CheckCircle className="text-primary shrink-0" size={18} />
                     {recommendation.nextStep}
                   </div>
                </div>
